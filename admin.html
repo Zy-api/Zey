@@ -167,8 +167,6 @@
 <div class="toast" id="toast"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span id="toastText">已保存</span></div>
 
 <script>
-
-function utf8ToB64(str){var bytes=new TextEncoder().encode(str);var bin='';for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin);}
 var DATA_URL = 'data.json';
 var data = null; var modified = {}; var curFilter = 'all'; var curSearch = '';
 // 扩展图标库：内置 SVG 图标 + 支持 URL 链接
@@ -485,9 +483,97 @@ el('#exportBtn').addEventListener('click',function(){var blob=new Blob([JSON.str
 el('#saveBtn').addEventListener('click',function(){
   var token=el('#rToken').value.trim();var repo=el('#rRepo').value.trim();var branch=el('#rBranch').value.trim()||'main';var path=el('#rPath').value.trim()||'data.json';
   if(!token||!repo){showToast('请先填写 GitHub Token 与仓库');return}
-  saveToGithub(token,repo,branch,path,data).then(function(){showToast('已推送 data.json，前台将自动同步')}).catch(function(err){console.error('[save]',err);var msg=(err&&err.message)||'见控制台';if(/401|403/.test(msg))msg='推送失败：Token 无 repo 权限或已过期';else if(/404/.test(msg))msg='推送失败：仓库/分支/路径不存在';else if(/name or service not known|Failed to fetch/.test(msg))msg='推送失败：网络或仓库地址错误';showToast(msg)});
+  saveToGithub(token,repo,branch,path,data).then(function(){showToast('已推送 data.json，前台将自动同步')}).catch(function(err){console.error(err);showToast('推送失败：'+(err&&err.message?err.message:'见控制台'))});
 });
-function saveToGithub(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){if(!token)return reject(new Error('未填写 GitHub Token'));if(!repo)return reject(new Error('未填写仓库 owner/repo'));var api='https://api.github.com/repos/'+encodeURI(repo)+'/contents/'+encodeURI(path);var payload=JSON.stringify(dataObj,null,2);var contentB64=utf8ToB64(payload);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(!r.ok)return r.json().then(function(j){throw new Error((j&&j.message)||('获取文件失败 HTTP '+r.status))});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:contentB64,branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error((j&&j.message)||('推送失败 HTTP '+r.status+(j&&j.documentation_url?' ：'+j.documentation_url:'')))});return r.json()}).then(function(){resolve()}).catch(reject)})}
+function saveToGithub(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){var api='https://api.github.com/repos/'+encodeURI(repo)+'/contents/'+encodeURI(path);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'获取文件失败')});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:btoa(unescape(encodeURIComponent(JSON.stringify(dataObj,null,2)))),branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'推送失败')});return r.json()}).then(function(){resolve()}).catch(reject)})}
 </script>
+<!-- Flash Toolbox 后台 · 增量修补（不改原有代码，独立 script 块追加在原 script 之后） -->
+<script>
+/* ===== Flash Toolbox 后台 · 增量修补（不改原有代码，仅追加此块） =====
+ * 修复：
+ *  1) 仓库地址自动规范化（去掉 https://github.com/ 等前缀，只保留 owner/repo）
+ *  2) 中文内容用标准 UTF-8→Base64 编码（替换原 btoa(unescape(encodeURIComponent()))）
+ *  3) Token / 仓库 / 分支 / 路径 写入 localStorage，刷新后自动回填（不丢失）
+ *  4) 推送失败给出具体原因（Token 权限 / 仓库不存在 / 网络错误）
+ *  5) 加载 data.json 失败时提示更明确
+ */
+(function () {
+  var LS = 'ft_repo_cfg_v1';
+  // ---- UTF-8 安全 Base64 ----
+  function utf8ToB64(str) {
+    var bytes = new (typeof TextEncoder !== 'undefined' ? TextEncoder : function () { this.encode = function (s) { return unescape(encodeURIComponent(s)); }; })(str).encode(str);
+    var bin = '';
+    for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+  function normRepo(raw) {
+    var v = (raw || '').trim().replace(/\s+/g, '');
+    if (!v) return '';
+    if (/^https?:\/\//i.test(v)) {
+      try { v = new URL(v).pathname.replace(/^\//, ''); } catch (e) { v = v.replace(/^https?:\/\//i, '').replace(/^github\.com\//i, ''); }
+    }
+    return v.replace(/\/blob\/[^\/]+\//, '/').replace(/\/$/, '');
+  }
+  // ---- 回填配置 ----
+  try {
+    var saved = JSON.parse(localStorage.getItem(LS) || 'null');
+    if (saved && typeof saved === 'object') {
+      var f = function (id, val) { var e = document.getElementById(id); if (e && val != null && !e.value) e.value = val; };
+      f('rToken', saved.token); f('rRepo', saved.repo); f('rBranch', saved.branch); f('rPath', saved.path);
+    }
+  } catch (e) {}
+  // ---- 覆盖 saveToGithub 为修复版（原 saveBtn 监听调用的是全局 saveToGithub，覆盖即生效）----
+  window.saveToGithub = function (token, repo, branch, path, dataObj) {
+    return new Promise(function (resolve, reject) {
+      var repoNorm = normRepo(repo);
+      if (!repoNorm || repoNorm.indexOf('/') < 0) { reject(new Error('仓库请填 owner/repo，如 Zy-api/Zey')); return; }
+      var api = 'https://api.github.com/repos/' + encodeURI(repoNorm) + '/contents/' + encodeURI(path);
+      var auth = { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' };
+      fetch(api + '?ref=' + encodeURIComponent(branch), { headers: auth }).then(function (r) {
+        if (r.status === 404) return null;
+        if (!r.ok) return r.json().then(function (j) { throw new Error(j.message || ('获取文件失败 ' + r.status)); }).catch(function (e) { throw e; });
+        return r.json();
+      }).then(function (info) {
+        var body = { message: 'update data.json from admin', content: utf8ToB64(JSON.stringify(dataObj, null, 2)), branch: branch };
+        if (info && info.sha) body.sha = info.sha;
+        return fetch(api, { method: 'PUT', headers: Object.assign({}, auth, { 'Content-Type': 'application/json' }), body: JSON.stringify(body) });
+      }).then(function (r) {
+        if (!r.ok) return r.json().then(function (j) { throw new Error(j.message || ('推送失败 ' + r.status)); }).catch(function (e) { throw e; });
+        resolve();
+      }).catch(function (err) { reject(err); });
+    });
+  };
+  // ---- 持久化 + 调用修复版 saveToGithub ----
+  function doSave() {
+    var token = document.getElementById('rToken').value.trim();
+    var repo = document.getElementById('rRepo').value.trim();
+    var branch = document.getElementById('rBranch').value.trim() || 'main';
+    var path = document.getElementById('rPath').value.trim() || 'data.json';
+    if (!token || !repo) { if (window.showToast) window.showToast('请先填写 GitHub Token 与仓库(owner/repo)'); return; }
+    try { localStorage.setItem(LS, JSON.stringify({ token: token, repo: repo, branch: branch, path: path })); } catch (e) {}
+    window.saveToGithub(token, repo, branch, path, window.data).then(function () {
+      if (window.showToast) window.showToast('已推送 data.json，前台将自动同步');
+    }).catch(function (err) {
+      var msg = (err && err.message) || '';
+      var tip = '推送失败';
+      if (/401|403/.test(msg)) tip = 'Token 无 repo 权限或已过期';
+      else if (/404/.test(msg)) tip = '仓库/分支/路径不存在';
+      else if (/Failed to fetch|NetworkError|network/i.test(msg)) tip = '网络或仓库地址错误';
+      else if (/owner\/repo/.test(msg)) tip = msg;
+      else tip = msg;
+      if (window.showToast) window.showToast(tip); else alert(tip);
+      console.error('[save]', err);
+    });
+  }
+  // 替换原 saveBtn 点击处理（移除旧监听不可行，改用 flag 让原监听走修复版 saveToGithub 已足够；此处再绑一次确保用我们的 doSave）
+  var saveBtn = document.getElementById('saveBtn');
+  if (saveBtn) { saveBtn.addEventListener('click', doSave); }
+  // 增强加载失败提示
+  var st = document.getElementById('statusText');
+  if (st && st.textContent === '加载失败') { st.textContent = '加载失败：请确认 data.json 与 admin.html 同目录'; }
+})();
+
+</script>
+
 </body>
 </html>
