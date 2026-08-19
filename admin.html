@@ -167,6 +167,8 @@
 <div class="toast" id="toast"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span id="toastText">已保存</span></div>
 
 <script>
+function utf8ToB64(str){var b;try{b=new TextEncoder().encode(str);}catch(e){var s=unescape(encodeURIComponent(str));b=new Uint8Array(s.length);for(var i=0;i<s.length;i++)b[i]=s.charCodeAt(i);}var bin='';for(var j=0;j<b.length;j++)bin+=String.fromCharCode(b[j]);return btoa(bin);}
+
 var DATA_URL = 'data.json';
 var data = null; var modified = {}; var curFilter = 'all'; var curSearch = '';
 // 扩展图标库：内置 SVG 图标 + 支持 URL 链接
@@ -178,13 +180,12 @@ function showToast(msg){el('#toastText').textContent=msg;el('#toast').classList.
 function svg(name,size){size=size||18;var raw=ICON_SVG[name]||ICON_SVG.cube||'';var m=raw.match(/viewBox='([^']+)'/);var vb=m?m[1]:'0 0 24 24';var inner=raw.replace(/<svg[^>]*>/,'').replace(/<\/svg>/,'');return '<svg width="'+size+'" height="'+size+'" viewBox="'+vb+'">'+inner+'</svg>'}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function unesc(s){return String(s||'').replace(/&quot;/g,'"').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&')}
-function utf8ToB64(str){var TE=(typeof TextEncoder!=='undefined')?TextEncoder:(function(){function T(){this.encode=function(s){var a=[];for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);if(c<128)a.push(c);else if(c<2048){a.push(192|(c>>6),128|(c&63))}else{a.push(224|(c>>12),128|((c>>6)&63),128|(c&63))}}return new Uint8Array(a)}}return T})();var bytes=new TE().encode(str);var bin='';for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin)}
 
 fetch(DATA_URL,{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
   data=d; ICON_SVG=data.icons||{};
   el('#status').classList.add('loaded'); el('#statusText').textContent='已加载';
   render();
-}).catch(function(err){el('#statusText').textContent='加载失败：请确认 data.json 与 admin.html 同目录';console.error('load data.json failed',err);var e=document.createElement('div');e.className='footer-note';e.style.color='#e0b96b';e.textContent='加载失败：请通过 HTTP 访问（如 GitHub Pages），且 data.json 与本文件在同一目录。';var s=document.getElementById('status');if(s&&s.parentNode)s.parentNode.insertBefore(e,s.nextSibling);});
+}).catch(function(err){el('#statusText').textContent='加载失败';console.error(err)});
 
 function setMod(key,val){modified[key]=val}
 function isMod(key){return key in modified}
