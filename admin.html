@@ -117,22 +117,82 @@
   @media(max-width:700px){.slider-grid{grid-template-columns:1fr}}
   .icon-section-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px;display:flex;align-items:center;gap:6px}
   .icon-section-label svg{width:14px;height:14px;color:var(--accent)}
+
+  /* ===== 黑金 UI 增强（增量） ===== */
+  .inp input,.inp select,.inp textarea,.search input,.icon-url-box input{
+    background:var(--card)!important;border:1px solid var(--border)!important;color:var(--text)!important;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.35);transition:border-color .15s,box-shadow .15s;
+  }
+  .inp input:focus,.inp select:focus,.inp textarea:focus,.search input:focus,.icon-url-box input:focus{
+    border-color:var(--accent)!important;box-shadow:inset 0 1px 2px rgba(0,0,0,.35),0 0 0 2px rgba(200,164,92,.18)!important;
+  }
+  .inp select{appearance:none;-webkit-appearance:none;padding-right:26px!important;
+    background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%)!important;
+    background-position:calc(100% - 14px) center,calc(100% - 9px) center!important;background-size:5px 5px,5px 5px!important;background-repeat:no-repeat!important;
+  }
+  input[type=color]{padding:2px!important;background:var(--card)!important;border:1px solid var(--border)!important;border-radius:8px;height:38px;width:64px}
+  input[type=checkbox]{accent-color:var(--accent)}
+  /* 自定义黑金选择弹窗 */
+  .gold-pop{position:fixed;left:0;right:0;bottom:0;z-index:400;display:none;flex-direction:column;
+    background:#111;border:1px solid var(--border);border-top:1px solid rgba(200,164,92,.35);
+    border-radius:14px 14px 0 0;padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+    box-shadow:0 -8px 30px rgba(0,0,0,.55);max-height:55vh;overflow:auto}
+  .gold-pop.show{display:flex}
+  .gold-pop .gp-title{font-size:13px;color:var(--accent);padding:8px 10px 4px;font-weight:700}
+  .gold-pop .gp-opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:transparent;
+    border:none;color:var(--text);font-size:14px;padding:12px 12px;border-radius:9px;cursor:pointer}
+  .gold-pop .gp-opt:hover,.gold-pop .gp-opt:active{background:rgba(200,164,92,.1)}
+  .gold-pop .gp-opt.sel{color:var(--accent);background:rgba(200,164,92,.14)}
+  .gold-pop .gp-opt.sel::after{content:'';margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent)}
+  .gold-pop .gp-cancel{margin-top:4px;border-top:1px solid var(--border);padding-top:6px}
+  .gold-pop .gp-cancel .gp-opt{color:var(--text3);justify-content:center}
+  .pop-mask{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:390;display:none}
+  .pop-mask.show{display:block}
+  /* 分组默认收起视觉提示 */
+  .group:not(.open) .group-head .caret{transform:rotate(0)}
+  .group:not(.open) .group-body{display:none}
 </style>
 
-<style id="gold-patch">
-  .inp input,.inp select,.inp textarea,.search-inp,input[type=text],input[type=number]{
-    background:#0a0a0a !important; color:#e0e0e0 !important; border:1px solid #2a2a2a !important;
-    border-radius:8px !important; padding:9px 10px !important; outline:none !important;
-    transition:border-color .2s,box-shadow .2s !important;
-  }
-  .inp input:focus,.inp select:focus,.inp textarea:focus,.search-inp:focus{
-    border-color:#d4af37 !important; box-shadow:0 0 0 2px rgba(212,175,55,.25) !important;
-  }
-  select{ -webkit-appearance:none; appearance:none; background-image:linear-gradient(45deg,transparent 50%,#d4af37 50%),linear-gradient(135deg,#d4af37 50%,transparent 50%); background-position:calc(100% - 14px) 50%,calc(100% - 9px) 50%; background-size:5px 5px; background-repeat:no-repeat; padding-right:22px !important; }
-  input[type=color]{ background:#0a0a0a !important; border:1px solid #2a2a2a !important; border-radius:8px !important; }
-  .group-head{ cursor:pointer; -webkit-tap-highlight-color:transparent; }
-  .group-head .caret{ display:inline-block; transition:transform .3s cubic-bezier(.4,0,.2,1); color:#777; }
-  .group.open .group-head .caret{ transform:rotate(90deg); }
+<style id="patch-inputs">
+.inp input,.inp select,.inp textarea,
+.search input,.icon-url-box input,
+.item input,.item textarea,.item select,
+input[type=text],input[type=number],input[type=url]{
+  background:#0a0a0a!important;border:1px solid var(--border)!important;color:var(--text)!important;
+  border-radius:10px!important;padding:10px 12px!important;font-size:13px!important;
+}
+.inp input:focus,.inp select:focus,.inp textarea:focus,
+.search input:focus,.icon-url-box input:focus,
+.item input:focus,.item textarea:focus,.item select:focus{
+  border-color:var(--accent)!important;box-shadow:0 0 0 2px rgba(212,175,55,.18)!important;
+}
+.inp select{appearance:none;-webkit-appearance:none;padding-right:26px!important;
+  background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%)!important;
+  background-position:calc(100% - 14px) 50%,calc(100% - 9px) 50%!important;background-size:5px 5px!important;background-repeat:no-repeat!important;}
+input[type=color]{padding:2px!important;background:#0a0a0a!important;border:1px solid var(--border)!important;border-radius:10px!important;height:38px;width:64px}
+input[type=checkbox]{accent-color:var(--accent)}
+</style>
+<style id="patch-deepinputs">
+.inp input,.inp select,.inp textarea,
+.search input,.icon-url-box input,
+.item input,.item textarea,.item select,
+input[type=text],input[type=number],input[type=url],input[type=password],
+textarea,select{
+  background:#0a0a0a!important;border:1px solid var(--border)!important;color:var(--text)!important;
+  border-radius:10px!important;padding:10px 12px!important;font-size:13px!important;
+  -webkit-appearance:none!important;appearance:none!important;
+}
+.inp input:focus,.inp select:focus,.inp textarea:focus,
+.search input:focus,.icon-url-box input:focus,
+.item input:focus,.item textarea:focus,.item select:focus,
+input:focus,textarea:focus,select:focus{
+  border-color:var(--accent)!important;outline:none!important;
+  box-shadow:0 0 0 2px rgba(200,164,92,.20)!important;
+}
+.inp select,select{background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%)!important;background-position:calc(100% - 14px) 50%,calc(100% - 9px) 50%!important;background-size:5px 5px!important;background-repeat:no-repeat!important;padding-right:26px!important}
+input[type=color]{padding:2px!important;background:#0a0a0a!important;border:1px solid var(--border)!important;border-radius:10px!important;height:38px;width:64px}
+input[type=checkbox]{accent-color:var(--accent)}
+::placeholder{color:var(--text3)!important}
 </style></head>
 <body>
 
@@ -182,11 +242,10 @@
 <div class="toast" id="toast"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span id="toastText">已保存</span></div>
 
 <script>
-function utf8ToB64(str){var bin='';new TextEncoder().encode(str).forEach(function(b){bin+=String.fromCharCode(b)});return btoa(bin);}
 var DATA_URL = 'data.json';
 var data = null; var modified = {}; var curFilter = 'all'; var curSearch = '';
 // 扩展图标库：内置 SVG 图标 + 支持 URL 链接
-var ICON_KEYS = ['cube','shield','package','bolt','download','gear','globe','paperplane','check','layers','terminal','flame','rocket','star','heart','zap','cpu','database','lock','shield-check','activity','server','code','tool','wrench','moon','sun','cloud','award','target','trending-up','thunderbolt'];
+function navItemTpl(it,idx){var d=document.createElement('div');d.className='item';d.innerHTML='<div class="item-head"><div class="t"><span class="ih">'+svg((it.icon||'cube'),18)+'</span><span>'+(it.labelZh||it.key||('导航 '+idx))+'</span></div><div class="acts"><button class="btn btn-ghost btn-sm" data-act="del">删除</button></div></div>';var g=document.createElement('div');g.className='grid2';g.innerHTML=textPair('显示文字（中）','labelZh',it.labelZh||'')+textPair('显示文字（En）','labelEn',it.labelEn||'')+textPair('链接 href','href',it.href||'#')+textPair('Key','key',it.key||'');g.appendChild(switchRow('是否在导航显示','show',it.show!==false));d.appendChild(g);return d}function menuItemTpl(it,idx){var d=document.createElement('div');d.className='item';d.innerHTML='<div class="item-head"><div class="t"><span class="ih">'+svg((it.icon||'cube'),18)+'</span><span>'+(it.labelZh||it.key||('菜单 '+idx))+'</span></div><div class="acts"><button class="btn btn-ghost btn-sm" data-act="del">删除</button></div></div>';var g=document.createElement('div');g.className='grid2';g.innerHTML=textPair('菜单文字（中）','labelZh',it.labelZh||'')+textPair('菜单文字（En）','labelEn',it.labelEn||'')+textPair('页面标识 page','page',it.page||it.key||'')+textPair('编号 num','num',it.num||'');g.appendChild(switchRow('是否在菜单显示','show',it.show!==false));d.appendChild(g);return d};var ICON_KEYS = ['cube','shield','package','bolt','download','gear','globe','paperplane','check','layers','terminal','flame','rocket','star','heart','zap','cpu','database','lock','shield-check','activity','server','code','tool','wrench','moon','sun','cloud','award','target','trending-up','thunderbolt'];
 var ICON_SVG = {};
 function el(s){return document.querySelector(s)}
 function all(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
@@ -239,7 +298,7 @@ function renderSection(sec){
   var wrap=document.createElement('div'); wrap.className='group';
   var head=document.createElement('div'); head.className='group-head';
   head.innerHTML='<div class="l"><span class="gh">'+svg(sec.icon||'cube',22)+'</span><h3>'+esc(sec.name)+'</h3><span class="tag">'+(sec.tag||'')+'</span></div><span class="caret">'+svg('caret',18)+'</span>';
-  /* click toggle delegated */
+  head.addEventListener('click',function(){wrap.classList.toggle('open')});
   var body=document.createElement('div'); body.className='group-body';
   if(sec.list){body.appendChild(renderListEditor(sec));}
   else if(sec.rows){sec.rows.forEach(function(r){body.appendChild(renderRow(r))});}
@@ -289,7 +348,7 @@ function renderItems(sec,arr,kind){
     var title=(it.titleZh||it.labelZh||it.textZh||it.key||('项 '+idx));
     item.innerHTML='<div class="item-head"><div class="t">'+(kind==='nav'?'<span class="ih">'+svg((it.icon||'cube'),18)+'</span>':'')+'<span>'+esc(title)+'</span></div><div class="acts"><button class="btn btn-ghost btn-sm" data-act="del">删除</button></div></div>';
     item.appendChild(fieldGrid(sec,item,it,idx));
-    (()=>{var _d=item.querySelector('[data-act="del"]');return _d?_d.addEventListener:function(){};})()('click',function(){if(confirm('确定删除该项？')){arr.splice(idx,1);persistList(sec,arr);render();setMod(sec.id,arr)}});
+    item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('确定删除该项？')){arr.splice(idx,1);persistList(sec,arr);render();setMod(sec.id,arr)}});
     wrap.appendChild(item);
   });
   var add=new ItemAdder(sec,arr);
@@ -383,9 +442,9 @@ function renderCardItem(cd,idx,arrKey){
     });
   });
   // features 解析
-  (()=>{var _fr=g.querySelector('[data-f="featuresRaw"]');return _fr?_fr.addEventListener:function(){};})()('input',function(){cd.features=(this.value||'').split('\n').map(function(line){var p=line.split(',');return {zh:(p[0]||'').trim(),en:(p[1]||'').trim()}}).filter(function(x){return x.zh||x.en});setMod(arrKey,data[arrKey])});
+  var fea=g.querySelector('[data-f="featuresRaw"]');if(fea)fea.addEventListener('input',function(){cd.features=(this.value||'').split('\n').map(function(line){var p=line.split(',');return {zh:(p[0]||'').trim(),en:(p[1]||'').trim()}}).filter(function(x){return x.zh||x.en});setMod(arrKey,data[arrKey])});
   // 上传转 base64
-  up.querySelector('[data-act="upload"]').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var fr=new FileReader();fr.onload=function(ev){cd.iconImg=ev.target.result;up.querySelector('[data-f="iconImg"]').value=cd.iconImg;up.querySelector('.prev').src=cd.iconImg;up.querySelector('.up-box').classList.add('hasimg');setMod(arrKey,data[arrKey])};fr.readAsDataURL(file)});
+  var upld=up.querySelector('[data-act="upload"]');if(upld)upld.addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var fr=new FileReader();fr.onload=function(ev){cd.iconImg=ev.target.result;up.querySelector('[data-f="iconImg"]').value=cd.iconImg;up.querySelector('.prev').src=cd.iconImg;up.querySelector('.up-box').classList.add('hasimg');setMod(arrKey,data[arrKey])};fr.readAsDataURL(file)});
   // SVG 图标选择器
   var iconPickHost=iconSec.querySelector('.icon-pick');
   ICON_KEYS.forEach(function(ik){
@@ -395,13 +454,13 @@ function renderCardItem(cd,idx,arrKey){
   });
   // 滑块绑定
   var orderInp=sliderSec.querySelector('[data-slider="order"]');var orderVal=sliderSec.querySelector('[data-slider-val="order"]');
-  orderInp.addEventListener('input',function(){cd.order=parseInt(this.value,10);orderVal.textContent=this.value;setMod(arrKey,data[arrKey])});
+  if(orderInp)orderInp.addEventListener('input',function(){cd.order=parseInt(this.value,10)||0;if(orderVal)orderVal.textContent=this.value;setMod(arrKey,data[arrKey])});
   var widthInp=sliderSec.querySelector('[data-slider="width"]');var widthVal=sliderSec.querySelector('[data-slider-val="width"]');
-  widthInp.addEventListener('input',function(){cd.width=parseInt(this.value,10);widthVal.textContent=this.value==='1'?'1列':this.value==='2'?'2列':'3列';setMod(arrKey,data[arrKey])});
+  if(widthInp)widthInp.addEventListener('input',function(){cd.width=parseInt(this.value,10)||1;if(widthVal)widthVal.textContent=this.value==='1'?'1列':this.value==='2'?'2列':'3列';setMod(arrKey,data[arrKey])});
   var sizeSel=sliderSec.querySelector('[data-slider="size"]');
   if(sizeSel)sizeSel.addEventListener('change',function(){cd.size=this.value;setMod(arrKey,data[arrKey])});
 
-  (()=>{var _d=item.querySelector('[data-act="del"]');return _d?_d.addEventListener:function(){};})()('click',function(){if(confirm('删除该卡片？')){data[arrKey].splice(idx,1);render();setMod(arrKey,data[arrKey])}});
+  item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('删除该卡片？')){data[arrKey].splice(idx,1);render();setMod(arrKey,data[arrKey])}});
   return item;
 }
 
@@ -442,7 +501,7 @@ function renderButtonItem(bt,idx){
   g.appendChild(switchRow('是否显示','show',bt.show!==false));
   item.appendChild(g);
   g.querySelectorAll('input[data-f],select[data-f]').forEach(function(inp){inp.addEventListener('input',function(){if(inp.type==='checkbox')bt[inp.dataset.f]=inp.checked;else bt[inp.dataset.f]=inp.value;setMod('buttons',data.buttons)})});
-  (()=>{var _d=item.querySelector('[data-act="del"]');return _d?_d.addEventListener:function(){};})()('click',function(){if(confirm('删除该按钮？')){data.buttons.splice(idx,1);render();setMod('buttons',data.buttons)}});
+  item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('删除该按钮？')){data.buttons.splice(idx,1);render();setMod('buttons',data.buttons)}});
   return item;
 }
 
@@ -501,62 +560,86 @@ el('#saveBtn').addEventListener('click',function(){
   if(!token||!repo){showToast('请先填写 GitHub Token 与仓库');return}
   saveToGithub(token,repo,branch,path,data).then(function(){showToast('已推送 data.json，前台将自动同步')}).catch(function(err){console.error(err);showToast('推送失败：'+(err&&err.message?err.message:'见控制台'))});
 });
-function saveToGithub(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){var api='https://api.github.com/repos/'+encodeURI(repo)+'/contents/'+encodeURI(path);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'获取文件失败')});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:utf8ToB64(JSON.stringify(dataObj,null,2)),branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'推送失败')});return r.json()}).then(function(){resolve()}).catch(reject)})}
-</script>
+function saveToGithub(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){var api='https://api.github.com/repos/'+encodeURI(repo)+'/contents/'+encodeURI(path);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'获取文件失败')});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:btoa(unescape(encodeURIComponent(JSON.stringify(dataObj,null,2)))),branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'推送失败')});return r.json()}).then(function(){resolve()}).catch(reject)})}
 
-<script id="fix-patch">
-(function(){
-  if(typeof navItemTpl!=='function') window.navItemTpl=function(){return '';};
-  if(typeof menuItemTpl!=='function') window.menuItemTpl=function(){return '';};
-  // fetch兼容层：若环境无fetch(如本地file://双击)，用内嵌数据伪装成功响应，保证render执行、15分组渲染
-  if(typeof fetch==='undefined'||!window.fetch){
-    window.fetch=function(url){return new Promise(function(res){res({ok:true,status:200,json:function(){return Promise.resolve(INLINE_DATA);},text:function(){return Promise.resolve(JSON.stringify(INLINE_DATA));}});});};
-  }
-  // 兜底：若一段时间后#groups仍空(fetch失败/本地打开)，用内嵌data渲染，保证15分组卡片存在可点击
-  var INLINE_DATA = {"_comment":"Flash Toolbox 数据文件：content=中英文案(后台可改全部文字)；theme=主题样式(颜色/字体/大小/圆角/动画，后台改后实时生效)；cards=主页卡片数组(可增删改/改图标/上传图片/滑块调位置大小)；dlCards=下载中心卡片数组；buttons=全局按钮数组；nav=菜单项数组；icons=SVG图标库(供后台选择)","content":{"zh":{"nav.download":"下载","nav.env":"过环境","nav.toolbox":"工具箱","nav.arch":"架构","menu.home":"主页","menu.pricing":"价格","menu.download":"下载","menu.features":"帮助","menu.help":"设置","lang.btn":"简体中文","mega.tg":"加入 TG","mega.metric1":"资源有效率","mega.metric2":"支持机型","mega.metric3":"全天候支持","mega.support":"联系支持","hero.badge":"Windows · PC刷机工具","hero.title":"精研底层 · 赋能调试","hero.desc":"集下载中心、过环境模块、刷机工具箱于一体的内核级解决方案，提供更稳定、更安全的运行环境。","hero.btn":"获取资源","hero.m1":"资源有效率","hero.m2":"支持机型","hero.m3":"全天候支持","sec1.index":"01 / 关于紫罗兰","sec1.heading":"紫罗兰工具箱","sec1.sub":"内核级刷机方案 →","card1.title":"关于紫罗兰","card1.version":"Violet Toolbox · 内核级方案","card1.desc":"紫罗兰工具箱（Violet Toolbox）是一款基于内核级技术的专业刷机与环境管理工具集，致力于为安卓设备提供稳定、安全、高效的刷机体验。集成 Bootloader 解锁、Recovery 刷入、ROM 刷机、Root 管理、过环境模块等全套能力，一站式解决设备深度定制需求。","card1.meta1":"持续更新","card1.meta2":"内核级","card1.btn":"了解更多","card2.title":"核心优势","card2.version":"为什么选择紫罗兰","card2.desc":"内核级架构保障运行稳定性，95% 资源有效率，支持 50+ 主流机型。全天候技术支持，持续跟进最新安卓版本与安全机制，让每一次刷机都安心无忧。","card2.meta1":"99.7% 成功率","card2.meta2":"50+ 机型","card2.btn":"查看详情","sec2.index":"02 / 常用模块","sec2.heading":"核心功能模块","sec2.sub":"了解各模块能力 →","env1.title":"LSPosed","env1.desc":"基于 Riru / Zygisk 的 ART 挂钩框架，提供与 OG Xposed 一致的 API。用来挂载 Hide My Applist、Shamiko 等 Xposed 模块，按应用粒度拦截方法调用，是过环境的上层载体。","env2.title":"Zygisk Next","env2.desc":"Zygisk 的独立实现，为 KernelSU / APatch 提供 Zygisk API 支持，替代 Magisk 内置 Zygisk。在新系统和高强度检测下更隐蔽，是 LSPosed 在 KernelSU 下激活的前置依赖。","env3.title":"TEE Simulator","env3.desc":"JingMatrix 维护的 systemless 模块，纯软件模拟 TEE 可信执行环境，生成虚拟密钥与认证证书链，支持多种模拟模式，过 Keystore Attestation 与硬件级证明检测。","env4.title":"Play Integrity Fix","env4.desc":"伪装 Bootloader 为\"已锁定\"、伪造安全补丁日期与设备指纹，修复 Google Play Integrity 的基础与设备完整性校验，解决银行/钱包类应用闪退问题。","sec3.index":"03 / 系统架构","sec3.heading1":"界面下发指令","sec3.heading2":"底层执行操作","sec3.desc":"依托可视化交互完成指令输出，由底层承载设备深度操作。覆盖救砖刷写、分区管控、模块部署等高阶能力，构建稳定可靠的安卓设备调试环境","arch1.title":"显示层 · 用户界面","arch1.desc":"图形化交互载体，输出设备调试相关指令","arch2.title":"框架层 · 能力调度","arch2.desc":"统筹刷机、分区、模块等复杂任务的逻辑编排","arch3.title":"内核层 · 核心能力","arch3.desc":"完成硬件层级读写刷写，落地全部深度操作","cta.title":"获取 Flash Toolbox 最新版本","cta.desc":"准备开始 — 加入社区获取更新通知与技术支持","cta.btn1":"立即下载","cta.btn2":"加入 Telegram ↗","footer.copy":"© 2026 Flash Toolbox · 保留所有权利","footer.home":"主页","footer.download":"下载","footer.module":"模块","footer.toolbox":"工具箱","footer.help":"帮助中心","footer.tg":"加入 Telegram","toast.fetch":"正在获取资源...","toast.welcome":"欢迎使用紫罗兰工具箱","toast.advantages":"查看紫罗兰核心优势","toast.download":"开始下载最新版本...","toast.success":"操作成功","dl.subtitle":"下载中心","dl.title":"获取最新<br>Flash Toolbox。","dl.desc":"选择项目，直接下载当前版本。","dl.available":"可用项目","dl.projects":"02 个项目","dl.v109":"当前版本 v1.0.9","dl.card1.title":"核心模块包","dl.card1.desc":"内核级调试解决方案。","dl.f1":"内核级运行","dl.f2":"ESP 与自动瞄准","dl.f3":"障碍判断","dl.f4":"子弹追踪","dl.card1.detail":"支持绝大多数设备！原生兼容内核5.10-6.12（需要Root），同时提供KPM驱动支持，灵活兼容4.1-6.12各类内核。","dl.card1.download":"立即下载","dl.card2.title":"高级工具集","dl.card2.desc":"进阶内核级功能扩展。","dl.f6":"环境隐藏","dl.f7":"完整性修复","dl.card2.detail":"支持绝大多数设备！原生兼容内核5.10-6.12（需要Root），同时提供KPM驱动支持，灵活兼容4.1-6.12各类内核。","dl.card2.download":"立即下载","dl.support.title":"联系支持","dl.support.desc":"通过 Telegram 或邮件，选择你方便的方式。","dl.contact.online":"在线联系","dl.contact.email":"邮件支持","dl.contact.send":"发送邮件","dl.slogan":"先进的内核级调试解决方案。","dl.col1":"探索","dl.nav.home":"主页","dl.nav.download":"下载","dl.nav.features":"功能","dl.col2":"支持","dl.nav.help":"帮助中心","dl.nav.email":"发送邮件","dl.copyright":"© 2026 Flash Toolbox<br>保留所有权利。"},"en":{"nav.download":"Download","nav.env":"Environment","nav.toolbox":"Toolbox","nav.arch":"Architecture","menu.home":"Home","menu.pricing":"Pricing","menu.download":"Download","menu.features":"Help","menu.help":"Settings","lang.btn":"English","mega.tg":"Join TG","mega.metric1":"Resource Validity","mega.metric2":"Supported Models","mega.metric3":"24/7 Support","mega.support":"Contact Support","hero.badge":"Windows · PC Flashing Tool","hero.title":"Deep Research · Empowering Debugging","hero.desc":"A kernel-level solution integrating download center, environment bypass modules, and flashing toolbox.","hero.btn":"Get Resources","hero.m1":"Resource Validity","hero.m2":"Supported Models","hero.m3":"24/7 Support","sec1.index":"01 / About Violet","sec1.heading":"Violet Toolbox","sec1.sub":"Kernel-level Flashing Solution →","card1.title":"About Violet","card1.version":"Violet Toolbox · Kernel-level Solution","card1.desc":"Violet Toolbox is a professional flashing and environment management toolset based on kernel-level technology.","card1.meta1":"Continuously Updated","card1.meta2":"Kernel-level","card1.btn":"Learn More","card2.title":"Core Advantages","card2.version":"Why Choose Violet","card2.desc":"Kernel-level architecture ensures runtime stability, 95% resource validity rate, supports 50+ mainstream models.","card2.meta1":"99.7% Success Rate","card2.meta2":"50+ Models","card2.btn":"View Details","sec2.index":"02 / Common Modules","sec2.heading":"Core Function Modules","sec2.sub":"Explore module capabilities →","env1.title":"LSPosed","env1.desc":"An ART hook framework based on Riru / Zygisk, providing an API consistent with OG Xposed.","env2.title":"Zygisk Next","env2.desc":"An independent implementation of Zygisk, providing Zygisk API support for KernelSU / APatch.","env3.title":"TEE Simulator","env3.desc":"A systemless module maintaining TEE trusted execution environment.","env4.title":"Play Integrity Fix","env4.desc":"Spoofs Bootloader to locked, fixes Google Play Integrity verification.","sec3.index":"03 / System Architecture","sec3.heading1":"Interface Issues Commands","sec3.heading2":"Bottom Layer Executes Operations","sec3.desc":"Relying on visual interaction to complete command output.","arch1.title":"Display Layer · User Interface","arch1.desc":"Graphical interaction carrier","arch2.title":"Framework Layer · Capability Scheduling","arch2.desc":"Orchestrating logical scheduling","arch3.title":"Kernel Layer · Core Capabilities","arch3.desc":"Completes hardware-level operations","cta.title":"Get the Latest Version of Flash Toolbox","cta.desc":"Ready to start — Join the community","cta.btn1":"Download Now","cta.btn2":"Join Telegram ↗","footer.copy":"© 2026 Flash Toolbox · All Rights Reserved","footer.home":"Home","footer.download":"Download","footer.module":"Modules","footer.toolbox":"Toolbox","footer.help":"Help Center","footer.tg":"Join Telegram","toast.fetch":"Fetching resources...","toast.welcome":"Welcome to Violet Toolbox","toast.advantages":"View Violet's Core Advantages","toast.download":"Starting to download...","toast.success":"Operation Successful","dl.subtitle":"Download Center","dl.title":"Get the Latest<br>Flash Toolbox.","dl.desc":"Select a project and download the current version directly.","dl.available":"Available Projects","dl.projects":"02 Projects","dl.v109":"Current Version v1.0.9","dl.card1.title":"Core Module Pack","dl.card1.desc":"Kernel-level debugging solution.","dl.f1":"Kernel-level Runtime","dl.f2":"ESP & Auto Aim","dl.f3":"Obstacle Detection","dl.f4":"Bullet Tracking","dl.card1.detail":"Supports most devices! Native compatibility with kernels 5.10-6.12 (Root required), with KPM driver support for flexible compatibility across kernels 4.1-6.12.","dl.card1.download":"Download Now","dl.card2.title":"Advanced Toolkit","dl.card2.desc":"Advanced kernel-level feature extensions.","dl.f6":"Environment Hiding","dl.f7":"Integrity Fix","dl.card2.detail":"Supports most devices! Native compatibility with kernels 5.10-6.12 (Root required), with KPM driver support for flexible compatibility across kernels 4.1-6.12.","dl.card2.download":"Download Now","dl.support.title":"Contact Support","dl.support.desc":"Choose the method that works best for you via Telegram or Email.","dl.contact.online":"Online Contact","dl.contact.email":"Email Support","dl.contact.send":"Send Email","dl.slogan":"Advanced kernel-level debugging solution.","dl.col1":"Explore","dl.nav.home":"Home","dl.nav.download":"Download","dl.nav.features":"Features","dl.col2":"Support","dl.nav.help":"Help Center","dl.nav.email":"Send Email","dl.copyright":"© 2026 Flash Toolbox<br>All Rights Reserved."}},"theme":{"_comment":"主题样式：后台改这里，前台通过CSS变量实时生效","colors":{"bg":"#0a0a0a","bg2":"#111111","card":"#161616","cardHover":"#1c1c1c","border":"#222222","accent":"#c8a45c","accent2":"#d4af6a","text":"#e8e8e8","text2":"#999999","text3":"#666666","green":"#3ecf6e","red":"#e05555"},"font":{"family":"-apple-system,BlinkMacSystemFont,\"Segoe UI\",\"PingFang SC\",\"Microsoft YaHei\",sans-serif","baseSize":"14px","heroTitleSize":"38px","sectionTitleSize":"20px","cardTitleSize":"15px","dlCardTitleSize":"24px"},"layout":{"radius":"14px","cardRadius":"16px","btnRadius":"10px","pageMaxWidth":"960px","sectionPadding":"36px 18px","heroPadding":"48px 18px 32px"},"nav":{"height":"60px","logoSize":"16px","linksGap":"18px","linksFontSize":"13px","sticky":true},"anim":{"cardHover":true,"btnHoverLift":true,"menuSlide":true,"duration":"0.25s","easing":"cubic-bezier(.2,.8,.2,1)"}},"brand":{"flash":"Flash","toolbox":"Toolbox","logoIcon":"cube"},"nav":[{"key":"download","labelZh":"下载","labelEn":"Download","href":"#download","show":true},{"key":"env","labelZh":"过环境","labelEn":"Environment","href":"#env","show":true},{"key":"toolbox","labelZh":"工具箱","labelEn":"Toolbox","href":"#toolbox","show":true},{"key":"arch","labelZh":"架构","labelEn":"Architecture","href":"#arch","show":true}],"menu":[{"key":"home","labelZh":"主页","labelEn":"Home","page":"home","num":"01","show":true},{"key":"download","labelZh":"下载","labelEn":"Download","page":"download","num":"02","show":true},{"key":"features","labelZh":"帮助","labelEn":"Help","page":"features","num":"03","show":true},{"key":"help","labelZh":"设置","labelEn":"Settings","page":"help","num":"04","show":true}],"cards":[{"id":"c1","titleZh":"关于紫罗兰","titleEn":"About Violet","versionZh":"Violet Toolbox · 内核级方案","versionEn":"Violet Toolbox · Kernel-level Solution","descZh":"紫罗兰工具箱（Violet Toolbox）是一款基于内核级技术的专业刷机与环境管理工具集。","descEn":"Violet Toolbox is a professional flashing and environment management toolset.","icon":"cube","iconColor":"#c8a45c","featured":true,"iconImg":"","iconUrl":"","order":0,"width":1,"size":"medium","btnTextZh":"了解更多","btnTextEn":"Learn More","btnStyle":"primary","btnLink":"#","meta":[{"textZh":"持续更新","textEn":"Continuously Updated"},{"textZh":"内核级","textEn":"Kernel-level"}],"show":true},{"id":"c2","titleZh":"核心优势","titleEn":"Core Advantages","versionZh":"为什么选择紫罗兰","versionEn":"Why Choose Violet","descZh":"内核级架构保障运行稳定性，95% 资源有效率，支持 50+ 主流机型。","descEn":"Kernel-level architecture ensures runtime stability, 95% resource validity rate, supports 50+ mainstream models.","icon":"shield","iconColor":"#c8a45c","featured":false,"iconImg":"","iconUrl":"","order":1,"width":1,"size":"medium","btnTextZh":"查看详情","btnTextEn":"View Details","btnStyle":"ghost","btnLink":"#","meta":[{"textZh":"99.7% 成功率","textEn":"99.7% Success Rate"},{"textZh":"50+ 机型","textEn":"50+ Models"}],"show":true}],"dlCards":[{"id":"dl1","titleZh":"核心模块包","titleEn":"Core Module Pack","descZh":"内核级调试解决方案。","descEn":"Kernel-level debugging solution.","versionZh":"当前版本 v1.0.9","versionEn":"Current Version v1.0.9","icon":"package","iconImg":"","iconUrl":"","iconColor":"#c8a45c","features":[{"zh":"内核级运行","en":"Kernel-level Runtime"},{"zh":"ESP 与自动瞄准","en":"ESP & Auto Aim"},{"zh":"障碍判断","en":"Obstacle Detection"},{"zh":"子弹追踪","en":"Bullet Tracking"}],"detailZh":"支持绝大多数设备！原生兼容内核5.10-6.12（需要Root），同时提供KPM驱动支持。","detailEn":"Supports most devices! Native compatibility with kernels 5.10-6.12 (Root required), with KPM driver support for flexible compatibility across kernels 4.1-6.12.","order":0,"width":1,"size":"medium","btnTextZh":"立即下载","btnTextEn":"Download Now","btnLink":"#","show":true},{"id":"dl2","titleZh":"高级工具集","titleEn":"Advanced Toolkit","descZh":"进阶内核级功能扩展。","descEn":"Advanced kernel-level feature extensions.","versionZh":"当前版本 v1.0.9","versionEn":"Current Version v1.0.9","icon":"bolt","iconImg":"","iconUrl":"","iconColor":"#c8a45c","features":[{"zh":"Systemless 注入","en":"Systemless Inject"},{"zh":"环境隐藏","en":"Environment Hiding"},{"zh":"完整性修复","en":"Integrity Fix"},{"zh":"TEE 模拟","en":"TEE Simulate"}],"detailZh":"支持绝大多数设备！原生兼容内核5.10-6.12（需要Root），同时提供KPM驱动支持。","detailEn":"Supports most devices! Native compatibility with kernels 5.10-6.12 (Root required), with KPM driver support for flexible compatibility across kernels 4.1-6.12.","order":1,"width":1,"size":"medium","btnTextZh":"立即下载","btnTextEn":"Download Now","btnLink":"#","show":true}],"buttons":[{"id":"bHero","textZh":"获取资源","textEn":"Get Resources","link":"#download","style":"primary","size":"medium","show":true},{"id":"bCta","textZh":"立即下载","textEn":"Download Now","link":"#download","style":"primary","size":"medium","show":true},{"id":"bTg","textZh":"Telegram ↗","textEn":"Telegram ↗","link":"https://t.me/NeverSttle888","style":"ghost","size":"medium","show":true}],"icons":{"cube":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 2L3 7v10l9 5 9-5V7l-9-5z'/><path d='M12 22V12'/><path d='M12 12L3 7'/><path d='M12 12l9-5'/></svg>","shield":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/></svg>","package":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='3' width='18' height='18' rx='2' ry='2'/><line x1='3' y1='9' x2='21' y2='9'/><line x1='9' y1='21' x2='9' y2='9'/></svg>","bolt":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/></svg>","download":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/><polyline points='7 10 12 15 17 10'/><line x1='12' y1='15' x2='12' y2='3'/></svg>","gear":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='3'/><path d='M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z'/></svg>","globe":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='10'/><line x1='2' y1='12' x2='22' y2='12'/><path d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/></svg>","paperplane":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 3L2 11l6 2 2 6 4-4 5 4z'/><line x1='8' y1='13' x2='21' y2='3'/></svg>","check":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polyline points='20 6 9 17 4 12'/></svg>","layers":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polygon points='12 2 2 7 12 12 22 7 12 2'/><polyline points='2 17 12 22 22 17'/><polyline points='2 12 12 17 22 12'/></svg>","terminal":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polyline points='4 17 10 11 4 5'/><line x1='12' y1='19' x2='20' y2='19'/></svg>","flame":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 2c1 4 4 6 4 10a4 4 0 0 1-8 0c0-2 1-3 1-3s-2 1-2 4a6 6 0 0 0 12 0c0-5-4-8-7-11z'/></svg>","rocket":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z'/><path d='M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z'/><path d='M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0'/><path d='M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5'/></svg>","star":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/></svg>","heart":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/></svg>","zap":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/></svg>","cpu":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='4' y='4' width='16' height='16' rx='2' ry='2'/><rect x='9' y='9' width='6' height='6'/><line x1='9' y1='1' x2='9' y2='4'/><line x1='15' y1='1' x2='15' y2='4'/><line x1='9' y1='20' x2='9' y2='23'/><line x1='15' y1='20' x2='15' y2='23'/><line x1='20' y1='9' x2='23' y2='9'/><line x1='20' y1='14' x2='23' y2='14'/><line x1='1' y1='9' x2='4' y2='9'/><line x1='1' y1='14' x2='4' y2='14'/></svg>","database":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><ellipse cx='12' cy='5' rx='9' ry='3'/><path d='M21 12c0 1.66-4 3-9 3s-9-1.34-9-3'/><path d='M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5'/></svg>","lock":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/></svg>","shield-check":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/><polyline points='9 12 11 14 15 10'/></svg>","activity":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polyline points='22 12 18 12 15 21 9 3 6 12 2 12'/></svg>","server":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><rect x='2' y='2' width='20' height='8' rx='2' ry='2'/><rect x='2' y='14' width='20' height='8' rx='2' ry='2'/><line x1='6' y1='6' x2='6.01' y2='6'/><line x1='6' y1='18' x2='6.01' y2='18'/></svg>","code":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polyline points='16 18 22 12 16 6'/><polyline points='8 6 2 12 8 18'/></svg>","tool":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'/></svg>","wrench":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z'/></svg>","moon":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/></svg>","sun":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='5'/><line x1='12' y1='1' x2='12' y2='3'/><line x1='12' y1='21' x2='12' y2='23'/><line x1='4.22' y1='4.22' x2='5.64' y2='5.64'/><line x1='18.36' y1='18.36' x2='19.78' y2='19.78'/><line x1='1' y1='12' x2='3' y2='12'/><line x1='21' y1='12' x2='23' y2='12'/><line x1='4.22' y1='19.78' x2='5.64' y2='18.36'/><line x1='18.36' y1='5.64' x2='19.78' y2='4.22'/></svg>","cloud":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z'/></svg>","award":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='8' r='7'/><polyline points='8.21 13.89 7 23 12 20 17 23 15.79 13.88'/></svg>","target":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><circle cx='12' cy='12' r='10'/><circle cx='12' cy='12' r='6'/><circle cx='12' cy='12' r='2'/></svg>","trending-up":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polyline points='23 6 13.5 15.5 8.5 10.5 1 18'/><polyline points='17 6 23 6 23 12'/></svg>","thunderbolt":"<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/></svg>"}};
-  function tryFallback(){
-    var g=document.getElementById('groups'); if(!g) return;
-    if(g.children.length>0) return; // 已渲染
-    try{
-      if(typeof data!=='undefined'){try{data=INLINE_DATA;}catch(e){}}
-      if(typeof ICON_SVG!=='undefined'){try{ICON_SVG=(INLINE_DATA&&INLINE_DATA.icons)||{};}catch(e){}}
-      if(typeof render==='function'){ render(); if(el&&el('#statusText'))el('#statusText').textContent='已加载(离线)'; if(el&&el('#status'))el('#status').classList.add('loaded'); return; }
-      // render未定义时手动生成15分组卡片(保证可点击延伸)
-      var keys=[['brand','站点品牌 / Logo','brand'],['hero','首屏 Hero','hero'],['sec1','区块一·关于紫罗兰','sec1'],['sec2','区块二·常用模块(环境)','env'],['sec3','区块三·系统架构','arch'],['cta','底部 CTA 横幅','cta'],['footer','页脚','footer'],['toast','提示 Toast 文案','toast'],['dlPanel','下载中心面板','dl'],['theme','主题样式(颜色/字体/布局/动画)','theme'],['cards','主页卡片','cards'],['dlCards','下载中心卡片','dl'],['buttons','全局按钮','btn'],['nav','顶部导航菜单','nav'],['menu','主菜单/下载面板菜单','menu']];
-      keys.forEach(function(kv){var grp=document.createElement('div');grp.className='group';grp.dataset.key=kv[2];grp.innerHTML='<div class="group-head"><span class="ico">◆</span><span class="ttl">'+kv[1]+'</span><span class="tag">'+kv[2]+'</span><span class="caret">▸</span></div><div class="group-body"><div class="pad"><div class="sub">该分组已加载(离线模式)，在线访问可完整编辑。</div></div></div>';g.appendChild(grp);});
-      if(el&&el('#statusText'))el('#statusText').textContent='已加载(离线)'; if(el&&el('#status'))el('#status').classList.add('loaded');
-    }catch(e){console.error('fallback render failed',e);}
-  }
-  setTimeout(tryFallback, 2500);
-  // 统一给每个.group-head绑onclick toggle一次（不经事件委托，避免JSDOM/真实环境双触发抵消）
-  // 原版renderSection内的head.addEventListener click toggle已被移除，故此处为唯一toggle，点击必延伸一次
-  function bindGroups(){
-    var root=document.getElementById('groups')||document.body;
-    function attach(){
-      root.querySelectorAll('.group-head').forEach(function(head){
-        if(head.dataset.bound==='1') return; head.dataset.bound='1';
-        head.onclick=function(ev){ ev&&ev.stopPropagation&&ev.stopPropagation(); var grp=head.parentElement; if(grp&&grp.classList.contains('group')) grp.classList.toggle('open'); };
+  /* ===== 黑金选择弹窗（增量，不改原有 select 数据绑定） ===== */
+  (function(){
+    var pop=document.createElement('div');pop.className='gold-pop';pop.innerHTML=
+      '<div class="gp-title"></div><div class="gp-list"></div><div class="gp-cancel"><button class="gp-opt" data-cancel="1">取消</button></div>';
+    var mask=document.createElement('div');mask.className='pop-mask';
+    document.body.appendChild(mask);document.body.appendChild(pop);
+    function close(){pop.classList.remove('show');mask.classList.remove('show')}
+    mask.addEventListener('click',close);pop.addEventListener('click',function(e){if(e.target.dataset.cancel!==undefined)close()});
+    function openPop(select){
+      var opts=Array.prototype.map.call(select.options,function(o){return {v:o.value,t:o.textContent,sel:o.selected}});
+      pop.querySelector('.gp-title').textContent=select.dataset.popTitle||(select.previousElementSibling&&select.previousElementSibling.textContent)||'请选择';
+      var list=pop.querySelector('.gp-list');list.innerHTML='';
+      opts.forEach(function(o){
+        var b=document.createElement('button');b.className='gp-opt'+(o.sel?' sel':'');
+        b.innerHTML='<span>'+o.t+'</span>';
+        b.addEventListener('click',function(){
+          select.value=o.v;
+          // 触发原有 input/change 监听（原代码用 addEventListener('input'/'change')，需手工派发）
+          select.dispatchEvent(new Event('input',{bubbles:true}));
+          select.dispatchEvent(new Event('change',{bubbles:true}));
+          close();
+        });
+        list.appendChild(b);
+      });
+      pop.classList.add('show');mask.classList.add('show');
+    }
+    // 拦截所有渲染后的 select（含动态渲染）：事件委托 + 初次增强
+    document.addEventListener('click',function(e){
+      var t=e.target;if(!t||t.tagName!=='SELECT')return;
+      // 仅处理后台内部 select（带 data-f / data-theme 或位于 .inp 内）
+      if(t.dataset.popDone){openPop(t);e.preventDefault();return}
+    },true);
+    function enhanceAll(){
+      document.querySelectorAll('select').forEach(function(sel){
+        if(sel.dataset.popDone)return;
+        sel.dataset.popDone='1';
+        sel.dataset.popTitle=(sel.closest('.inp')&&sel.closest('.inp').querySelector('label'))?sel.closest('.inp').querySelector('label').textContent:'请选择';
+        sel.addEventListener('click',function(e){openPop(sel);e.preventDefault()},true);
+        sel.addEventListener('focus',function(e){e.preventDefault();this.blur();openPop(this)},true);
       });
     }
-    attach();
-    // 动态生成的分组（卡片新增/渲染重绘）自动补绑
-    try{ new MutationObserver(attach).observe(root,{childList:true,subtree:true}); }catch(e){}
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',bindGroups); else bindGroups();
-  // 黑金底部弹窗替代系统select（仅#groups内）
-  function goldPop(opts,selVal,onPick){
-    var mask=document.createElement('div'); mask.className='gold-pop-mask';
-    var box=document.createElement('div'); box.className='gold-pop';
-    opts.forEach(function(o){var d=document.createElement('div');d.className='gold-pop-opt'+(o.value===selVal?' sel':'');d.textContent=o.label;d.onclick=function(){onPick(o.value);mask.remove();};box.appendChild(d);});
-    var c=document.createElement('div');c.className='gold-pop-cancel';c.textContent='取消';c.onclick=function(){mask.remove();};box.appendChild(c);mask.appendChild(box);document.body.appendChild(mask);requestAnimationFrame(function(){mask.classList.add('show');});
-  }
-  var ps=document.createElement('style');ps.textContent='.gold-pop-mask{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:none;align-items:flex-end;justify-content:center;}.gold-pop-mask.show{display:flex;}.gold-pop{width:100%;max-width:480px;background:#111;border-top:2px solid #d4af37;border-radius:16px 16px 0 0;padding:8px 0 18px;max-height:60vh;overflow:auto;}.gold-pop-opt{padding:13px 18px;color:#e0e0e0;font-size:15px;border-bottom:1px solid #1c1c22;}.gold-pop-opt.sel{color:#d4af37;}.gold-pop-opt.sel:after{content:" •";color:#d4af37;}.gold-pop-opt:active{background:#1a1a20;}.gold-pop-cancel{margin-top:6px;text-align:center;color:#888;padding:12px;} .gold-pop-fake{background:#0a0a0a;color:#e0e0e0;border:1px solid #2a2a2a;border-radius:8px;padding:9px 10px;font-size:14px;}';
-  document.head.appendChild(ps);
-  function bindSelects(){var root=document.getElementById('groups');if(!root)return;root.querySelectorAll('select').forEach(function(s){if(s.dataset.gold==='1')return;s.dataset.gold='1';s.style.display='none';var wrap=document.createElement('div');wrap.style.position='relative';s.parentNode.insertBefore(wrap,s);wrap.appendChild(s);var fake=document.createElement('div');fake.className='gold-pop-fake';var paint=function(){var o=s.options[s.selectedIndex];fake.textContent=o?o.text:'请选择';};paint();wrap.appendChild(fake);fake.onclick=function(){var arr=[];for(var i=0;i<s.options.length;i++)arr.push({label:s.options[i].text,value:s.options[i].value});goldPop(arr,s.value,function(v){s.value=v;paint();s.dispatchEvent(new Event('change',{bubbles:true}));});};});}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bindSelects);else bindSelects();
-  // 自动填充仓库/分支/路径
-  function fill(){var r=document.getElementById('repo'),b=document.getElementById('branch'),p=document.getElementById('path');if(r&&!r.value)r.value='Zy-api/Zey';if(b&&!b.value)b.value='main';if(p&&!p.value)p.value='data.json';}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fill);else fill();
+    enhanceAll();
+    // 渲染后重新增强（卡片/按钮/主题等动态渲染）
+    var ro=new MutationObserver(enhanceAll);
+    ro.observe(document.body,{childList:true,subtree:true});
+  })();
+
+  /* ===== 增量：utf8ToB64 安全中文编码 + localStorage 持久化(刷新不丢) ===== */
+  (function(){
+    function utf8ToB64(str){var bytes=new (window.TextEncoder||(function(){function T(){this.encode=function(t){return Array.prototype.map.call(unescape(encodeURIComponent(t)),function(c){return c.charCodeAt(0)})}}return T}))().encode(str);var bin=bytes.map(function(b){return String.fromCharCode(b)}).join('');return btoa(bin)}
+    window.utf8ToB64=utf8ToB64;
+    // 包装 saveToGithub：改用 utf8ToB64 编码 content，避免中文推送失败
+    var origSave=window.saveToGithub;if(typeof origSave==='function'){window.saveToGithub=function(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){var api='https://api.github.com/repos/'+encodeURI(repo)+'/contents/'+encodeURI(path);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(!r.ok)return r.json().then(function(j){reject(new Error(j.message||'获取文件失败'));return});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:utf8ToB64(JSON.stringify(dataObj,null,2)),branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(!r.ok)return r.json().then(function(j){reject(new Error(j.message||'推送失败'));return});resolve()}).catch(function(err){reject(err)})})}}
+    // localStorage 持久化：加载回填 + 保存写入
+    var F='zy_admin_cfg_v1';function loadCfg(){try{return JSON.parse(localStorage.getItem(F)||'{}')||{}}catch(e){return {}}}function saveCfg(o){try{localStorage.setItem(F,JSON.stringify(o))}catch(e){}}
+    var cfg=loadCfg();var el=function(id){return document.getElementById(id)};
+    if(cfg.token&&el('rToken'))el('rToken').value=cfg.token;
+    if(cfg.repo&&el('rRepo'))el('rRepo').value=cfg.repo;
+    if(cfg.branch&&el('rBranch'))el('rBranch').value=cfg.branch;
+    if(cfg.path&&el('rPath'))el('rPath').value=cfg.path;
+    function persist(){saveCfg({token:el('rToken')?el('rToken').value.trim():'',repo:el('rRepo')?el('rRepo').value.trim():'',branch:el('rBranch')?el('rBranch').value.trim():'',path:el('rPath')?el('rPath').value.trim():''})}
+    ['rToken','rRepo','rBranch','rPath'].forEach(function(id){var e=el(id);if(e)e.addEventListener('input',persist)});
+    // 保存按钮点击时再次持久化
+    var saveBtn=el('saveBtn');if(saveBtn){saveBtn.addEventListener('click',persist,true)}
+    // 加载数据成功时也持久化一次
+    var loadBtn=el('loadBtn');if(loadBtn){loadBtn.addEventListener('click',function(){setTimeout(persist,0)},true)}
+  })();
+</script>
+
+<script id="patch-boot">
+(function(){
+  function start(d){try{data=d;if(window.ICON_SVG)window.ICON_SVG=d.icons||{};var st=document.getElementById('status');var stt=document.getElementById('statusText');if(st)st.classList.add('loaded');if(stt)stt.textContent='已加载';if(typeof render==='function')render();}catch(e){console.error('start err',e)}
+  /* 给所有分组标题绑点击 toggle(默认收起；动态新增卡片也自动补绑) */
+  function bindToggles(){var g=document.getElementById('groups');if(!g)return;g.querySelectorAll('.group.open').forEach(function(x){x.classList.remove('open')});g.querySelectorAll('.group-head').forEach(function(h){if(h.dataset.toggled==='1')return;h.dataset.toggled='1';h.addEventListener('click',function(ev){ev.stopPropagation();var x=h.closest('.group');if(x)x.classList.toggle('open')},true)});}
+  setTimeout(bindToggles,0);new MutationObserver(bindToggles).observe(document.body,{childList:true,subtree:true});}
+  function loadInline(){try{start(JSON.parse(decodeURIComponent(escape(atob('/commentFlashToolboxpnconten')))));}catch(e){console.error('inline fallback err',e);var stt=document.getElementById('statusText');if(stt)stt.textContent='加载失败'}}
+  function go(){if(window.fetch){try{fetch('data.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){start(d)}).catch(loadInline);}catch(e){loadInline()}}else{loadInline()}}
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',go);}else{go();}
 })();
 </script></body>
 </html>
