@@ -167,8 +167,7 @@
 <div class="toast" id="toast"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span id="toastText">已保存</span></div>
 
 <script>
-function utf8ToB64(str){var b;try{b=new TextEncoder().encode(str);}catch(e){var s=unescape(encodeURIComponent(str));b=new Uint8Array(s.length);for(var i=0;i<s.length;i++)b[i]=s.charCodeAt(i);}var bin='';for(var j=0;j<b.length;j++)bin+=String.fromCharCode(b[j]);return btoa(bin);}
-
+function utf8ToB64(str){var te=new TextEncoder();var u8=te.encode(str);var bin='';for(var i=0;i<u8.length;i++)bin+=String.fromCharCode(u8[i]);return btoa(bin)}
 var DATA_URL = 'data.json';
 var data = null; var modified = {}; var curFilter = 'all'; var curSearch = '';
 // 扩展图标库：内置 SVG 图标 + 支持 URL 链接
@@ -198,6 +197,8 @@ function render(){
   updateStat();
 }
 
+function navItemTpl(it,idx){return null}
+function menuItemTpl(it,idx){return null}
 function buildSections(){
   var c=data.content||{}; var zh=c.zh||{}; var en=c.en||{};
   var keys=Object.keys(zh);
