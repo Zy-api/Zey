@@ -291,7 +291,7 @@
   <h1>Tool‑Vault<br><span class="gold" data-i18n="hero.title">精研底层 · 赋能调试</span></h1>
   <p data-i18n="hero.desc">集下载中心、过环境模块、刷机工具箱于一体的内核级解决方案，提供更稳定、更安全的运行环境。</p>
   <div class="hero-actions">
-    <button class="btn btn-primary" onclick="openDownloadPage()">
+    <button class="btn btn-primary" id="heroGetBtn">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       <span data-i18n="hero.btn">获取资源</span>
     </button>
@@ -362,7 +362,7 @@
     <h3 data-i18n="cta.title">获取 Flash Toolbox 最新版本</h3>
     <p data-i18n="cta.desc">准备开始 — 加入社区获取更新通知与技术支持</p>
     <div class="cta-banner-actions">
-      <button class="btn btn-primary" onclick="openDownloadPage()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span data-i18n="cta.btn1">立即下载</span></button>
+      <button class="btn btn-primary" id="ctaDownloadBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span data-i18n="cta.btn1">立即下载</span></button>
       <a href="https://t.me/NeverSttle888" target="_blank" class="btn btn-ghost">Telegram ↗</a>
     </div>
   </div>
@@ -697,6 +697,11 @@
   if(navHome) navHome.addEventListener('click', function(e){ e.preventDefault(); setActiveNav('home'); closeDownloadPage(); window.scrollTo({top:0,behavior:'smooth'}); setMenu(false); });
   var navDownload = document.getElementById('navDownload');
   if(navDownload) navDownload.addEventListener('click', function(e){ e.preventDefault(); setActiveNav('download'); openDownloadPage(); setMenu(false); });
+
+  var heroGetBtn = document.getElementById('heroGetBtn');
+  if(heroGetBtn) heroGetBtn.addEventListener('click', function(e){ e.preventDefault(); openDownloadPage(); });
+  var ctaDownloadBtn = document.getElementById('ctaDownloadBtn');
+  if(ctaDownloadBtn) ctaDownloadBtn.addEventListener('click', function(e){ e.preventDefault(); openDownloadPage(); });
 
   var dlPanel = document.getElementById('dlPanel');
   var dlOverlay = document.getElementById('dlOverlay');
