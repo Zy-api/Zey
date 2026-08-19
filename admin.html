@@ -117,6 +117,15 @@
   @media(max-width:700px){.slider-grid{grid-template-columns:1fr}}
   .icon-section-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px;display:flex;align-items:center;gap:6px}
   .icon-section-label svg{width:14px;height:14px;color:var(--accent)}
+  /* ===== 增量：卡片尺寸/位置实时预览块（纯展示，不改原有滑块/图标逻辑） ===== */
+  .size-preview{margin-top:10px;padding:10px 12px;background:var(--card);border:1px dashed rgba(200,164,92,.35);border-radius:10px}
+  .size-preview .sp-head{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+  .size-preview .sp-head svg{width:14px;height:14px}
+  .size-preview .sp-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .size-preview .sp-box{flex:1;min-width:60px;text-align:center;padding:8px 4px;border-radius:8px;background:var(--bg);border:1px solid var(--border)}
+  .size-preview .sp-box b{display:block;font-size:12px;color:var(--text);font-weight:700}
+  .size-preview .sp-box span{font-size:10px;color:var(--text3)}
+  .size-preview .sp-tip{font-size:10px;color:var(--text3);margin-top:8px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -346,6 +355,15 @@ function renderCardItem(cd,idx,arrKey){
     sliderHTML('位置排序','order',cd.order||0,0,10,1)+
     sliderHTML('占列宽度','width',cd.width||1,1,3,1)+
     sizeSliderHTML('卡片大小','size',cd.size||'medium')+
+    '</div>'+
+    '<div class="size-preview" data-preview>'+
+      '<div class="sp-head"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>实时预览（拖动滑块后数值自动更新）</div>'+
+      '<div class="sp-row">'+
+        '<div class="sp-box"><b data-pv-order>'+(cd.order||0)+'</b><span>位置排序</span></div>'+
+        '<div class="sp-box"><b data-pv-width">'+(cd.width||1)+'列</b><span>占列宽度</span></div>'+
+        '<div class="sp-box"><b data-pv-size">'+(cd.size==='small'?'小':cd.size==='large'?'大':'中')+'</b><span>卡片大小</span></div>'+
+      '</div>'+
+      '<div class="sp-tip">提示：拖动上方滑块调整 → 点"保存修改"推送 data.json → 前台刷新即按 位置排序/占列宽度/卡片大小(small·medium·large) 重新渲染。图标可点选上方 SVG 库或填图标链接。</div>'+
     '</div>';
   g.appendChild(sliderSec);
 
@@ -379,11 +397,14 @@ function renderCardItem(cd,idx,arrKey){
   });
   // 滑块绑定
   var orderInp=sliderSec.querySelector('[data-slider="order"]');var orderVal=sliderSec.querySelector('[data-slider-val="order"]');
-  orderInp.addEventListener('input',function(){cd.order=parseInt(this.value,10);orderVal.textContent=this.value;setMod(arrKey,data[arrKey])});
+  var pvOrder=sliderSec.querySelector('[data-pv-order]');
+  orderInp.addEventListener('input',function(){cd.order=parseInt(this.value,10);orderVal.textContent=this.value;if(pvOrder)pvOrder.textContent=this.value;setMod(arrKey,data[arrKey])});
   var widthInp=sliderSec.querySelector('[data-slider="width"]');var widthVal=sliderSec.querySelector('[data-slider-val="width"]');
-  widthInp.addEventListener('input',function(){cd.width=parseInt(this.value,10);widthVal.textContent=this.value==='1'?'1列':this.value==='2'?'2列':'3列';setMod(arrKey,data[arrKey])});
+  var pvWidth=sliderSec.querySelector('[data-pv-width]');
+  widthInp.addEventListener('input',function(){cd.width=parseInt(this.value,10);widthVal.textContent=this.value==='1'?'1列':this.value==='2'?'2列':'3列';if(pvWidth)pvWidth.textContent=this.value+'列';setMod(arrKey,data[arrKey])});
   var sizeSel=sliderSec.querySelector('[data-slider="size"]');
-  sizeSel.addEventListener('change',function(){cd.size=this.value;setMod(arrKey,data[arrKey])});
+  var pvSize=sliderSec.querySelector('[data-pv-size]');
+  sizeSel.addEventListener('change',function(){cd.size=this.value;if(pvSize)pvSize.textContent=cd.size==='small'?'小':cd.size==='large'?'大':'中';setMod(arrKey,data[arrKey])});
 
   item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('删除该卡片？')){data[arrKey].splice(idx,1);render();setMod(arrKey,data[arrKey])}});
   return item;
