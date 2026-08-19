@@ -183,7 +183,7 @@ fetch(DATA_URL,{cache:'no-cache'}).then(function(r){return r.json()}).then(funct
   data=d; ICON_SVG=data.icons||{};
   el('#status').classList.add('loaded'); el('#statusText').textContent='已加载';
   render();
-}).catch(function(err){el('#statusText').textContent='加载失败';console.error(err)});
+}).catch(function(err){window.__adminLastLoadErr__=err;var st=el('#statusText');if(st){st.textContent='加载失败'}var stat=el('#stat');var reason='';if(err&&/Failed to fetch/i.test(String(err.message||err))){reason='：网络错误，请确认 data.json 与 admin.html 同目录且已通过 GitHub Pages 发布'}else if((err&&/Unexpected token/i.test(String(err.message||err)))||/JSON/i.test(String(err.message||err))){reason='：data.json 解析失败（内容可能为空或非合法 JSON）'}else{reason='：'+String((err&&err.message)||err)}if(stat){stat.textContent='共 0 条 · 已修改 0 条'}console.error('[admin] data.json 加载失败'+reason+(err&&err.stack?'\n'+err.stack:''),err)});
 
 function setMod(key,val){modified[key]=val}
 function isMod(key){return key in modified}
@@ -199,6 +199,9 @@ function render(){
 function buildSections(){
   var c=data.content||{}; var zh=c.zh||{}; var en=c.en||{};
   var keys=Object.keys(zh);
+  // 列表项模板（供 nav/menu 分组配置 itemTpl 引用；实际列表渲染由 renderItems/fieldGrid 完成，此处仅保证引用可解析）
+  function navItemTpl(it,idx){return '<div class="item"><div class="item-head"><span>'+esc(it.labelZh||it.key||('导航项 '+idx))+'</span></div></div>';}
+  function menuItemTpl(it,idx){return '<div class="item"><div class="item-head"><span>'+esc(it.labelZh||it.key||('菜单项 '+idx))+'</span></div></div>';}
   var secs=[
     {id:'brand',name:'站点品牌 / Logo',tag:'brand',icon:'cube',rows:[
       {k:'brand.flash',label:'Logo 文字（Flash）',get:function(){return (data.brand||{}).flash||'Flash'},set:function(v){(data.brand=data.brand||{}).flash=v}},
@@ -361,13 +364,13 @@ function renderCardItem(cd,idx,arrKey){
     inp.addEventListener('input',function(){
       var f=inp.dataset.f; if(f==='featuresRaw')return;
       if(inp.type==='checkbox')cd[f]=inp.checked; else if(inp.type==='file'){} else cd[f]=inp.value;
-      if(f==='iconImg'){var prev=up.querySelector('.prev');if(cd[f]){up.querySelector('.up-box').classList.add('hasimg');prev.src=cd[f]}else{up.querySelector('.up-box').classList.remove('hasimg')}}
-      if(f==='iconUrl'){var pu=iconSec.querySelector('.prev-img');if(cd[f]){pu.src=cd[f];pu.classList.add('show')}else{pu.classList.remove('show')}}
+      if(f==='iconImg'){var upBox=up.querySelector('.up-box');var prev=up.querySelector('.prev');if(cd[f]){if(upBox)upBox.classList.add('hasimg');if(prev)prev.src=cd[f]}else{if(upBox)upBox.classList.remove('hasimg')}}
+      if(f==='iconUrl'){var pu=iconSec.querySelector('.prev-img');if(pu){if(cd[f]){pu.src=cd[f];pu.classList.add('show')}else{pu.classList.remove('show')}}}
       setMod(arrKey,data[arrKey]);
     });
   });
-  // features 解析
-  g.querySelector('[data-f="featuresRaw"]').addEventListener('input',function(){cd.features=(this.value||'').split('\n').map(function(line){var p=line.split(',');return {zh:(p[0]||'').trim(),en:(p[1]||'').trim()}}).filter(function(x){return x.zh||x.en});setMod(arrKey,data[arrKey])});
+  // features 解析（仅下载中心卡片 dlCards 含 featuresRaw 字段）
+  var featInp=g.querySelector('[data-f="featuresRaw"]'); if(featInp){featInp.addEventListener('input',function(){cd.features=(this.value||'').split('\n').map(function(line){var p=line.split(',');return {zh:(p[0]||'').trim(),en:(p[1]||'').trim()}}).filter(function(x){return x.zh||x.en});setMod(arrKey,data[arrKey])});}
   // 上传转 base64
   up.querySelector('[data-act="upload"]').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var fr=new FileReader();fr.onload=function(ev){cd.iconImg=ev.target.result;up.querySelector('[data-f="iconImg"]').value=cd.iconImg;up.querySelector('.prev').src=cd.iconImg;up.querySelector('.up-box').classList.add('hasimg');setMod(arrKey,data[arrKey])};fr.readAsDataURL(file)});
   // SVG 图标选择器
@@ -379,13 +382,13 @@ function renderCardItem(cd,idx,arrKey){
   });
   // 滑块绑定
   var orderInp=sliderSec.querySelector('[data-slider="order"]');var orderVal=sliderSec.querySelector('[data-slider-val="order"]');
-  orderInp.addEventListener('input',function(){cd.order=parseInt(this.value,10);orderVal.textContent=this.value;setMod(arrKey,data[arrKey])});
+  if(orderInp){orderInp.addEventListener('input',function(){cd.order=parseInt(this.value,10);if(orderVal)orderVal.textContent=this.value;setMod(arrKey,data[arrKey])});}
   var widthInp=sliderSec.querySelector('[data-slider="width"]');var widthVal=sliderSec.querySelector('[data-slider-val="width"]');
-  widthInp.addEventListener('input',function(){cd.width=parseInt(this.value,10);widthVal.textContent=this.value==='1'?'1列':this.value==='2'?'2列':'3列';setMod(arrKey,data[arrKey])});
+  if(widthInp){widthInp.addEventListener('input',function(){cd.width=parseInt(this.value,10);if(widthVal)widthVal.textContent=this.value==='1'?'1列':this.value==='2'?'2列':'3列';setMod(arrKey,data[arrKey])});}
   var sizeSel=sliderSec.querySelector('[data-slider="size"]');
-  sizeSel.addEventListener('change',function(){cd.size=this.value;setMod(arrKey,data[arrKey])});
+  if(sizeSel){sizeSel.addEventListener('change',function(){cd.size=this.value;setMod(arrKey,data[arrKey])});}
 
-  item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('删除该卡片？')){data[arrKey].splice(idx,1);render();setMod(arrKey,data[arrKey])}});
+  var delBtn=item.querySelector('[data-act="del"]'); if(delBtn){delBtn.addEventListener('click',function(){if(confirm('删除该卡片？')){data[arrKey].splice(idx,1);render();setMod(arrKey,data[arrKey])}});}
   return item;
 }
 
@@ -568,9 +571,12 @@ function saveToGithub(token,repo,branch,path,dataObj){return new Promise(functio
   // 替换原 saveBtn 点击处理（移除旧监听不可行，改用 flag 让原监听走修复版 saveToGithub 已足够；此处再绑一次确保用我们的 doSave）
   var saveBtn = document.getElementById('saveBtn');
   if (saveBtn) { saveBtn.addEventListener('click', doSave); }
-  // 增强加载失败提示
+  // 增强加载失败提示（带具体原因）
   var st = document.getElementById('statusText');
-  if (st && st.textContent === '加载失败') { st.textContent = '加载失败：请确认 data.json 与 admin.html 同目录'; }
+  if (st && /加载失败/.test(st.textContent)) {
+    var lastErr = (window.__adminLastLoadErr__ && window.__adminLastLoadErr__.message) ? String(window.__adminLastLoadErr__.message) : '';
+    st.textContent = '加载失败' + (lastErr ? '（' + lastErr.slice(0, 80) + '）' : '：请确认 data.json 与 admin.html 同目录且已发布');
+  }
 })();
 
 </script>
