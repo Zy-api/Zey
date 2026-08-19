@@ -117,15 +117,6 @@
   @media(max-width:700px){.slider-grid{grid-template-columns:1fr}}
   .icon-section-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px;display:flex;align-items:center;gap:6px}
   .icon-section-label svg{width:14px;height:14px;color:var(--accent)}
-  /* ===== 增量：卡片尺寸/位置实时预览块（纯展示，不改原有滑块/图标逻辑） ===== */
-  .size-preview{margin-top:10px;padding:10px 12px;background:var(--card);border:1px dashed rgba(200,164,92,.35);border-radius:10px}
-  .size-preview .sp-head{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-  .size-preview .sp-head svg{width:14px;height:14px}
-  .size-preview .sp-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .size-preview .sp-box{flex:1;min-width:60px;text-align:center;padding:8px 4px;border-radius:8px;background:var(--bg);border:1px solid var(--border)}
-  .size-preview .sp-box b{display:block;font-size:12px;color:var(--text);font-weight:700}
-  .size-preview .sp-box span{font-size:10px;color:var(--text3)}
-  .size-preview .sp-tip{font-size:10px;color:var(--text3);margin-top:8px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -176,6 +167,8 @@
 <div class="toast" id="toast"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span id="toastText">已保存</span></div>
 
 <script>
+
+function utf8ToB64(str){var bytes=new TextEncoder().encode(str);var bin='';for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin);}
 var DATA_URL = 'data.json';
 var data = null; var modified = {}; var curFilter = 'all'; var curSearch = '';
 // 扩展图标库：内置 SVG 图标 + 支持 URL 链接
@@ -355,15 +348,6 @@ function renderCardItem(cd,idx,arrKey){
     sliderHTML('位置排序','order',cd.order||0,0,10,1)+
     sliderHTML('占列宽度','width',cd.width||1,1,3,1)+
     sizeSliderHTML('卡片大小','size',cd.size||'medium')+
-    '</div>'+
-    '<div class="size-preview" data-preview>'+
-      '<div class="sp-head"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>实时预览（拖动滑块后数值自动更新）</div>'+
-      '<div class="sp-row">'+
-        '<div class="sp-box"><b data-pv-order>'+(cd.order||0)+'</b><span>位置排序</span></div>'+
-        '<div class="sp-box"><b data-pv-width">'+(cd.width||1)+'列</b><span>占列宽度</span></div>'+
-        '<div class="sp-box"><b data-pv-size">'+(cd.size==='small'?'小':cd.size==='large'?'大':'中')+'</b><span>卡片大小</span></div>'+
-      '</div>'+
-      '<div class="sp-tip">提示：拖动上方滑块调整 → 点"保存修改"推送 data.json → 前台刷新即按 位置排序/占列宽度/卡片大小(small·medium·large) 重新渲染。图标可点选上方 SVG 库或填图标链接。</div>'+
     '</div>';
   g.appendChild(sliderSec);
 
@@ -397,14 +381,11 @@ function renderCardItem(cd,idx,arrKey){
   });
   // 滑块绑定
   var orderInp=sliderSec.querySelector('[data-slider="order"]');var orderVal=sliderSec.querySelector('[data-slider-val="order"]');
-  var pvOrder=sliderSec.querySelector('[data-pv-order]');
-  orderInp.addEventListener('input',function(){cd.order=parseInt(this.value,10);orderVal.textContent=this.value;if(pvOrder)pvOrder.textContent=this.value;setMod(arrKey,data[arrKey])});
+  orderInp.addEventListener('input',function(){cd.order=parseInt(this.value,10);orderVal.textContent=this.value;setMod(arrKey,data[arrKey])});
   var widthInp=sliderSec.querySelector('[data-slider="width"]');var widthVal=sliderSec.querySelector('[data-slider-val="width"]');
-  var pvWidth=sliderSec.querySelector('[data-pv-width]');
-  widthInp.addEventListener('input',function(){cd.width=parseInt(this.value,10);widthVal.textContent=this.value==='1'?'1列':this.value==='2'?'2列':'3列';if(pvWidth)pvWidth.textContent=this.value+'列';setMod(arrKey,data[arrKey])});
+  widthInp.addEventListener('input',function(){cd.width=parseInt(this.value,10);widthVal.textContent=this.value==='1'?'1列':this.value==='2'?'2列':'3列';setMod(arrKey,data[arrKey])});
   var sizeSel=sliderSec.querySelector('[data-slider="size"]');
-  var pvSize=sliderSec.querySelector('[data-pv-size]');
-  sizeSel.addEventListener('change',function(){cd.size=this.value;if(pvSize)pvSize.textContent=cd.size==='small'?'小':cd.size==='large'?'大':'中';setMod(arrKey,data[arrKey])});
+  sizeSel.addEventListener('change',function(){cd.size=this.value;setMod(arrKey,data[arrKey])});
 
   item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('删除该卡片？')){data[arrKey].splice(idx,1);render();setMod(arrKey,data[arrKey])}});
   return item;
@@ -504,9 +485,9 @@ el('#exportBtn').addEventListener('click',function(){var blob=new Blob([JSON.str
 el('#saveBtn').addEventListener('click',function(){
   var token=el('#rToken').value.trim();var repo=el('#rRepo').value.trim();var branch=el('#rBranch').value.trim()||'main';var path=el('#rPath').value.trim()||'data.json';
   if(!token||!repo){showToast('请先填写 GitHub Token 与仓库');return}
-  saveToGithub(token,repo,branch,path,data).then(function(){showToast('已推送 data.json，前台将自动同步')}).catch(function(err){console.error(err);showToast('推送失败：'+(err&&err.message?err.message:'见控制台'))});
+  saveToGithub(token,repo,branch,path,data).then(function(){showToast('已推送 data.json，前台将自动同步')}).catch(function(err){console.error('[save]',err);var msg=(err&&err.message)||'见控制台';if(/401|403/.test(msg))msg='推送失败：Token 无 repo 权限或已过期';else if(/404/.test(msg))msg='推送失败：仓库/分支/路径不存在';else if(/name or service not known|Failed to fetch/.test(msg))msg='推送失败：网络或仓库地址错误';showToast(msg)});
 });
-function saveToGithub(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){var api='https://api.github.com/repos/'+encodeURI(repo)+'/contents/'+encodeURI(path);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'获取文件失败')});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:btoa(unescape(encodeURIComponent(JSON.stringify(dataObj,null,2)))),branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'推送失败')});return r.json()}).then(function(){resolve()}).catch(reject)})}
+function saveToGithub(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){if(!token)return reject(new Error('未填写 GitHub Token'));if(!repo)return reject(new Error('未填写仓库 owner/repo'));var api='https://api.github.com/repos/'+encodeURI(repo)+'/contents/'+encodeURI(path);var payload=JSON.stringify(dataObj,null,2);var contentB64=utf8ToB64(payload);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(!r.ok)return r.json().then(function(j){throw new Error((j&&j.message)||('获取文件失败 HTTP '+r.status))});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:contentB64,branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error((j&&j.message)||('推送失败 HTTP '+r.status+(j&&j.documentation_url?' ：'+j.documentation_url:'')))});return r.json()}).then(function(){resolve()}).catch(reject)})}
 </script>
 </body>
 </html>
