@@ -67,6 +67,14 @@
   .dl-card:hover{border-color:#333;background:var(--card-hover)}
   .dl-card.featured{border-color:rgba(200,164,92,.35)}
   .dl-card.featured::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+  .dl-card-sm{padding:14px;gap:10px}
+  .dl-card-sm .dl-card-icon{width:36px;height:36px}
+  .dl-card-sm .dl-card-title{font-size:13px}
+  .dl-card-sm .dl-card-desc{font-size:11px}
+  .dl-card-lg{padding:26px;gap:18px}
+  .dl-card-lg .dl-card-icon{width:52px;height:52px}
+  .dl-card-lg .dl-card-title{font-size:17px}
+  .dl-card-lg .dl-card-desc{font-size:13px}
   .dl-card-head{display:flex;align-items:center;gap:10px}
   .dl-card-icon{width:42px;height:42px;border-radius:11px;background:rgba(200,164,92,.1);display:flex;align-items:center;justify-content:center}
   .dl-card-icon svg{width:20px;height:20px;color:var(--accent)}
@@ -291,7 +299,7 @@
   <h1>Tool‑Vault<br><span class="gold" data-i18n="hero.title">精研底层 · 赋能调试</span></h1>
   <p data-i18n="hero.desc">集下载中心、过环境模块、刷机工具箱于一体的内核级解决方案，提供更稳定、更安全的运行环境。</p>
   <div class="hero-actions">
-    <button class="btn btn-primary" id="heroGetBtn">
+    <button class="btn btn-primary" onclick="openDownloadPage()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       <span data-i18n="hero.btn">获取资源</span>
     </button>
@@ -328,7 +336,7 @@
       </div>
       <div class="dl-card-desc" data-i18n="card2.desc">内核级架构保障运行稳定性，95% 资源有效率，支持 50+ 主流机型。全天候技术支持，持续跟进最新安卓版本与安全机制，让每一次刷机都安心无忧。</div>
       <div class="dl-card-meta"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> <span data-i18n="card2.meta1">99.7% 成功率</span></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> <span data-i18n="card2.meta2">50+ 机型</span></span></div>
-      <button class="dl-btn ghost" style="justify-content:center;" onclick="showToast('toast.advantages')"><span data-i18n="card2.btn">查看详情</span></button>
+      <button class="dl-btn ghost" onclick="showToast('toast.advantages')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span data-i18n="card2.btn">查看详情</span></button>
     </div>
   </div>
 </section>
@@ -362,7 +370,7 @@
     <h3 data-i18n="cta.title">获取 Flash Toolbox 最新版本</h3>
     <p data-i18n="cta.desc">准备开始 — 加入社区获取更新通知与技术支持</p>
     <div class="cta-banner-actions">
-      <button class="btn btn-primary" id="ctaDownloadBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span data-i18n="cta.btn1">立即下载</span></button>
+      <button class="btn btn-primary" onclick="openDownloadPage()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg><span data-i18n="cta.btn1">立即下载</span></button>
       <a href="https://t.me/NeverSttle888" target="_blank" class="btn btn-ghost">Telegram ↗</a>
     </div>
   </div>
@@ -698,11 +706,6 @@
   var navDownload = document.getElementById('navDownload');
   if(navDownload) navDownload.addEventListener('click', function(e){ e.preventDefault(); setActiveNav('download'); openDownloadPage(); setMenu(false); });
 
-  var heroGetBtn = document.getElementById('heroGetBtn');
-  if(heroGetBtn) heroGetBtn.addEventListener('click', function(e){ e.preventDefault(); openDownloadPage(); });
-  var ctaDownloadBtn = document.getElementById('ctaDownloadBtn');
-  if(ctaDownloadBtn) ctaDownloadBtn.addEventListener('click', function(e){ e.preventDefault(); openDownloadPage(); });
-
   var dlPanel = document.getElementById('dlPanel');
   var dlOverlay = document.getElementById('dlOverlay');
   function openDownloadPage() {
@@ -738,6 +741,5 @@
 
   window.addEventListener('scroll', function(){ if(isOpen()) setMenu(false); });
 </script>
-  <script src="loader.js"></script>
-</body>
+<script src="loader.js"></script></body>
 </html>
