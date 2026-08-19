@@ -193,6 +193,10 @@ function render(){
   var g=el('#groups'); g.innerHTML='';
   var secs=buildSections();
   secs.forEach(function(sec){g.appendChild(renderSection(sec))});
+  try{ var _t=renderThemeSection(); if(_t){_t.classList.remove('open'); g.appendChild(_t);} }catch(e){console.error('theme',e)}
+  try{ var _c=renderCardsSection(); if(_c){_c.classList.remove('open'); g.appendChild(_c);} }catch(e){console.error('cards',e)}
+  try{ var _d=renderDlCardsSection(); if(_d){_d.classList.remove('open'); g.appendChild(_d);} }catch(e){console.error('dlCards',e)}
+  try{ var _b=renderButtonsSection(); if(_b){_b.classList.remove('open'); g.appendChild(_b);} }catch(e){console.error('buttons',e)}
   updateStat();
 }
 
@@ -220,7 +224,7 @@ function buildSections(){
 }
 function pickKeys(allKeys,want){return want.filter(function(k){return allKeys.indexOf(k)>=0}).map(function(k){return {k:k,label:k}})}
 function renderSection(sec){
-  var wrap=document.createElement('div'); wrap.className='group open';
+  var wrap=document.createElement('div'); wrap.className='group';
   var head=document.createElement('div'); head.className='group-head';
   head.innerHTML='<div class="l"><span class="gh">'+svg(sec.icon||'cube',22)+'</span><h3>'+esc(sec.name)+'</h3><span class="tag">'+(sec.tag||'')+'</span></div><span class="caret">'+svg('caret',18)+'</span>';
   head.addEventListener('click',function(){wrap.classList.toggle('open')});
@@ -294,7 +298,7 @@ function ItemAdder(sec,arr){this.el=document.createElement('div');this.el.classN
 
 /* ---------- 卡片管理（主页卡片 + 下载中心卡片） ---------- */
 function renderCardsSection(){
-  var wrap=document.createElement('div'); wrap.className='group open';
+  var wrap=document.createElement('div'); wrap.className='group';
   wrap.innerHTML='<div class="group-head"><div class="l"><span class="gh">'+svg('package',22)+'</span><h3>主页卡片（图标/位置/大小/滑块调整）</h3><span class="tag">cards</span></div><span class="caret">'+svg('caret',18)+'</span></div>';
   var body=document.createElement('div'); body.className='group-body';
   (data.cards||[]).forEach(function(cd,idx){body.appendChild(renderCardItem(cd,idx,'cards'))});
@@ -302,7 +306,7 @@ function renderCardsSection(){
   var _h=wrap.querySelector('.group-head');if(_h)_h.onclick=function(){wrap.classList.toggle('open')};wrap.appendChild(body); return wrap;
 }
 function renderDlCardsSection(){
-  var wrap=document.createElement('div'); wrap.className='group open';
+  var wrap=document.createElement('div'); wrap.className='group';
   wrap.innerHTML='<div class="group-head"><div class="l"><span class="gh">'+svg('download',22)+'</span><h3>下载中心卡片（图标/链接/位置/大小）</h3><span class="tag">dlCards</span></div><span class="caret">'+svg('caret',18)+'</span></div>';
   var body=document.createElement('div'); body.className='group-body';
   (data.dlCards||[]).forEach(function(cd,idx){body.appendChild(renderCardItem(cd,idx,'dlCards'))});
@@ -405,7 +409,7 @@ function cardAdder(arrKey){
 
 /* ---------- 按钮管理 ---------- */
 function renderButtonsSection(){
-  var wrap=document.createElement('div'); wrap.className='group open';
+  var wrap=document.createElement('div'); wrap.className='group';
   wrap.innerHTML='<div class="group-head"><div class="l"><span class="gh">'+svg('bolt',22)+'</span><h3>全局按钮（文字 / 链接 / 大小 / 样式）</h3><span class="tag">buttons</span></div><span class="caret">'+svg('caret',18)+'</span></div>';
   var body=document.createElement('div'); body.className='group-body';
   (data.buttons||[]).forEach(function(bt,idx){body.appendChild(renderButtonItem(bt,idx))});
@@ -432,7 +436,7 @@ function renderButtonItem(bt,idx){
 
 /* ---------- 主题分组 ---------- */
 function renderThemeSection(){
-  var wrap=document.createElement('div'); wrap.className='group open';
+  var wrap=document.createElement('div'); wrap.className='group';
   wrap.innerHTML='<div class="group-head"><div class="l"><span class="gh">'+svg('gear',22)+'</span><h3>主题样式（颜色 / 字体 / 布局 / 动画）</h3><span class="tag">theme</span></div><span class="caret">'+svg('caret',18)+'</span></div>';
   var body=document.createElement('div'); body.className='group-body';
   body.appendChild(themeColorGrid());body.appendChild(themeFontGrid());body.appendChild(themeLayoutGrid());body.appendChild(themeNavGrid());body.appendChild(themeAnimGrid());
