@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Flash Toolbox · 后台管理</title>
 <style>
-  :root{--bg:#0a0a0a;--bg2:#111111;--panel:#161616;--card:#1c1c1c;--border:#222;--accent:#c8a45c;--accent2:#d4af6a;--text:#e8e8e8;--text2:#999;--text3:#666;--radius:14px;--danger:#e05555}
+  :root{--bg:#0d0d0d;--panel:#151515;--card:#1c1c1c;--border:#2a2a2a;--accent:#c8a45c;--accent2:#d4af6a;--text:#ececec;--text2:#9a9a9a;--text3:#666;--radius:12px;--danger:#e05555}
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.5;overflow-x:hidden}
   html{max-width:100vw}
-  body{background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(200,164,92,.08),transparent 60%),var(--bg);overflow-y:auto;overflow-x:hidden;width:100%;max-width:100vw}
+  body{background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(200,164,92,.06),transparent 60%),var(--bg);overflow-y:auto;overflow-x:hidden;width:100%;max-width:100vw}
   .wrap,.repo-bar,.topbar-inner{max-width:100%}
   a{color:inherit;text-decoration:none}
   svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -117,50 +117,6 @@
   @media(max-width:700px){.slider-grid{grid-template-columns:1fr}}
   .icon-section-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px;display:flex;align-items:center;gap:6px}
   .icon-section-label svg{width:14px;height:14px;color:var(--accent)}
-
-  /* ===== 黑金主题覆盖（增量，不改原有规则）===== */
-  .inp input,.inp select,.inp textarea,
-  .lang-col input,.lang-col textarea,.lang-col select,
-  .row input,.row textarea,.row select,
-  input[type="text"],input[type="password"],input[type="url"],input[type="number"],input[type="file"],
-  .search input,.icon-url-box input{
-    background:var(--card,#1c1c1c)!important;color:var(--text,#e8e8e8)!important;
-    border:1px solid var(--border,#222)!important;
-    border-radius:8px!important;
-    padding:9px 11px!important;
-  }
-  .inp input:focus,.inp select:focus,.inp textarea:focus,
-  .lang-col input:focus,.lang-col textarea:focus,.lang-col select:focus,
-  .row input:focus,.row textarea:focus,.row select:focus,
-  input[type="text"]:focus,input[type="password"]:focus,input[type="url"]:focus,
-  .search input:focus,.icon-url-box input:focus{
-    border-color:var(--accent,#c8a45c)!important;
-    box-shadow:inset 0 0 0 1px rgba(200,164,92,.25),0 0 0 2px rgba(200,164,92,.18)!important;
-    outline:none!important;
-  }
-  .inp select,.lang-col select,.row select{
-    -webkit-appearance:none;appearance:none;
-    background-image:linear-gradient(45deg,transparent 50%,var(--accent,#c8a45c) 50%),linear-gradient(135deg,var(--accent,#c8a45c) 50%,transparent 50%)!important;
-    background-position:calc(100% - 14px) 50%,calc(100% - 9px) 50%!important;
-    background-size:5px 5px,5px 5px!important;background-repeat:no-repeat!important;
-    padding-right:26px!important;
-  }
-  input[type="color"]{background:var(--card)!important;border:1px solid var(--border)!important;border-radius:8px;padding:2px}
-  input[type="file"]{padding:6px 11px!important;color:var(--text2)!important}
-  .group-head{cursor:pointer;user-select:none}
-  .group .caret{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
-  .group.open .caret{transform:rotate(90deg)}
-  .pop-mask{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:260;opacity:0;pointer-events:none;transition:opacity .2s}
-  .pop-mask.show{opacity:1;pointer-events:auto}
-  .gold-pop{position:fixed;left:0;right:0;bottom:0;z-index:270;background:#111;border-top:2px solid var(--accent,#c8a45c);border-radius:14px 14px 0 0;padding:8px 8px 14px;transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.8,.2,1);max-height:60vh;overflow-y:auto}
-  .gold-pop.show{transform:translateY(0)}
-  .gold-pop .opt{padding:13px 14px;font-size:14px;color:var(--text,#ececec);border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between}
-  .gold-pop .opt:last-of-type{border-bottom:none}
-  .gold-pop .opt.active{color:var(--accent,#c8a45c);font-weight:700}
-  .gold-pop .opt.active::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent,#c8a45c);box-shadow:0 0 6px var(--accent,#c8a45c)}
-  .gold-pop .opt:active{background:rgba(200,164,92,.08)}
-  .gold-pop .cancel{margin-top:8px;padding:12px;border-top:1px solid var(--border,#2a2a2a);color:var(--text2,#9a9a9a);text-align:center;font-size:13px}
-  .gold-pop .pop-title{padding:10px 14px 6px;font-size:12px;color:var(--text3,#666);text-transform:uppercase;letter-spacing:.5px}
 </style>
 </head>
 <body>
@@ -213,19 +169,6 @@
 <script>
 var DATA_URL = 'data.json';
 var data = null; var modified = {}; var curFilter = 'all'; var curSearch = '';
-// 手动导入 fallback
-function showImportFallback(){
-  var g=el('#groups');
-  g.innerHTML='<div style="text-align:center;padding:40px 20px"><div style="font-size:40px;color:var(--accent);margin-bottom:16px">⚠</div><h3 style="font-size:16px;margin-bottom:8px">无法自动加载 data.json</h3><p style="color:var(--text2);font-size:13px;margin-bottom:20px">请手动选择本地 data.json 文件导入，或者检查文件路径是否正确。</p><input type="file" id="importFile" accept=".json" style="display:none"><button class="btn btn-primary" onclick="el(\'#importFile\').click()">选择 data.json 文件导入</button></div>';
-  el('#importFile').addEventListener('change',function(e){
-    var file=e.target.files[0]; if(!file)return;
-    var fr=new FileReader();
-    fr.onload=function(ev){
-      try{var d=JSON.parse(ev.target.result);data=d;ICON_SVG=data.icons||{};el('#status').classList.add('loaded');el('#statusText').textContent='已导入';render();showToast('已导入 '+file.name);}catch(err){showToast('JSON 解析失败：'+err.message);}
-    };
-    fr.readAsText(file);
-  });
-}
 // 扩展图标库：内置 SVG 图标 + 支持 URL 链接
 var ICON_KEYS = ['cube','shield','package','bolt','download','gear','globe','paperplane','check','layers','terminal','flame','rocket','star','heart','zap','cpu','database','lock','shield-check','activity','server','code','tool','wrench','moon','sun','cloud','award','target','trending-up','thunderbolt'];
 var ICON_SVG = {};
@@ -236,16 +179,11 @@ function svg(name,size){size=size||18;var raw=ICON_SVG[name]||ICON_SVG.cube||'';
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function unesc(s){return String(s||'').replace(/&quot;/g,'"').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&')}
 
-fetch(DATA_URL,{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(d){
+fetch(DATA_URL,{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
   data=d; ICON_SVG=data.icons||{};
   el('#status').classList.add('loaded'); el('#statusText').textContent='已加载';
-  try{render();}catch(e){console.error(e);el('#statusText').textContent='渲染错误';}
-}).catch(function(err){
-  el('#statusText').textContent='加载失败';
-  console.error('[admin] data.json 加载失败:',err);
-  // 提供手动导入入口
-  showImportFallback();
-});
+  render();
+}).catch(function(err){el('#statusText').textContent='加载失败';console.error(err)});
 
 function setMod(key,val){modified[key]=val}
 function isMod(key){return key in modified}
@@ -335,7 +273,7 @@ function renderItems(sec,arr,kind){
     var title=(it.titleZh||it.labelZh||it.textZh||it.key||('项 '+idx));
     item.innerHTML='<div class="item-head"><div class="t">'+(kind==='nav'?'<span class="ih">'+svg((it.icon||'cube'),18)+'</span>':'')+'<span>'+esc(title)+'</span></div><div class="acts"><button class="btn btn-ghost btn-sm" data-act="del">删除</button></div></div>';
     item.appendChild(fieldGrid(sec,item,it,idx));
-    item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('确定删除该项？')){arr.splice(idx,1);persistList(sec,arr);render();setMod(sec.id,arr)}});
+    item.querySelector('[data-act="del"]')&&item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('确定删除该项？')){arr.splice(idx,1);persistList(sec,arr);render();setMod(sec.id,arr)}});
     wrap.appendChild(item);
   });
   var add=new ItemAdder(sec,arr);
@@ -361,7 +299,7 @@ function renderCardsSection(){
   var body=document.createElement('div'); body.className='group-body';
   (data.cards||[]).forEach(function(cd,idx){body.appendChild(renderCardItem(cd,idx,'cards'))});
   body.appendChild(cardAdder('cards'));
-  wrap.appendChild(body); return wrap;
+  var _h=wrap.querySelector('.group-head');if(_h)_h.onclick=function(){wrap.classList.toggle('open')};wrap.appendChild(body); return wrap;
 }
 function renderDlCardsSection(){
   var wrap=document.createElement('div'); wrap.className='group open';
@@ -369,7 +307,7 @@ function renderDlCardsSection(){
   var body=document.createElement('div'); body.className='group-body';
   (data.dlCards||[]).forEach(function(cd,idx){body.appendChild(renderCardItem(cd,idx,'dlCards'))});
   body.appendChild(cardAdder('dlCards'));
-  wrap.appendChild(body); return wrap;
+  var _h=wrap.querySelector('.group-head');if(_h)_h.onclick=function(){wrap.classList.toggle('open')};wrap.appendChild(body); return wrap;
 }
 
 function renderCardItem(cd,idx,arrKey){
@@ -429,9 +367,9 @@ function renderCardItem(cd,idx,arrKey){
     });
   });
   // features 解析
-  g.querySelector('[data-f="featuresRaw"]').addEventListener('input',function(){cd.features=(this.value||'').split('\n').map(function(line){var p=line.split(',');return {zh:(p[0]||'').trim(),en:(p[1]||'').trim()}}).filter(function(x){return x.zh||x.en});setMod(arrKey,data[arrKey])});
+  g.querySelector('[data-f="featuresRaw"]')&&g.querySelector('[data-f="featuresRaw"]').addEventListener('input',function(){cd.features=(this.value||'').split('\n').map(function(line){var p=line.split(',');return {zh:(p[0]||'').trim(),en:(p[1]||'').trim()}}).filter(function(x){return x.zh||x.en});setMod(arrKey,data[arrKey])});
   // 上传转 base64
-  up.querySelector('[data-act="upload"]').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var fr=new FileReader();fr.onload=function(ev){cd.iconImg=ev.target.result;up.querySelector('[data-f="iconImg"]').value=cd.iconImg;up.querySelector('.prev').src=cd.iconImg;up.querySelector('.up-box').classList.add('hasimg');setMod(arrKey,data[arrKey])};fr.readAsDataURL(file)});
+  up.querySelector('[data-act="upload"]')&&up.querySelector('[data-act="upload"]').addEventListener('change',function(e){var file=e.target.files[0];if(!file)return;var fr=new FileReader();fr.onload=function(ev){cd.iconImg=ev.target.result;up.querySelector('[data-f="iconImg"]').value=cd.iconImg;up.querySelector('.prev').src=cd.iconImg;up.querySelector('.up-box').classList.add('hasimg');setMod(arrKey,data[arrKey])};fr.readAsDataURL(file)});
   // SVG 图标选择器
   var iconPickHost=iconSec.querySelector('.icon-pick');
   ICON_KEYS.forEach(function(ik){
@@ -441,13 +379,13 @@ function renderCardItem(cd,idx,arrKey){
   });
   // 滑块绑定
   var orderInp=sliderSec.querySelector('[data-slider="order"]');var orderVal=sliderSec.querySelector('[data-slider-val="order"]');
-  orderInp.addEventListener('input',function(){cd.order=parseInt(this.value,10);orderVal.textContent=this.value;setMod(arrKey,data[arrKey])});
+  orderInp&&orderInp.addEventListener('input',function(){cd.order=parseInt(this.value,10);orderVal.textContent=this.value;setMod(arrKey,data[arrKey])});
   var widthInp=sliderSec.querySelector('[data-slider="width"]');var widthVal=sliderSec.querySelector('[data-slider-val="width"]');
-  widthInp.addEventListener('input',function(){cd.width=parseInt(this.value,10);widthVal.textContent=this.value==='1'?'1列':this.value==='2'?'2列':'3列';setMod(arrKey,data[arrKey])});
+  widthInp&&widthInp.addEventListener('input',function(){cd.width=parseInt(this.value,10);widthVal.textContent=this.value==='1'?'1列':this.value==='2'?'2列':'3列';setMod(arrKey,data[arrKey])});
   var sizeSel=sliderSec.querySelector('[data-slider="size"]');
-  sizeSel.addEventListener('change',function(){cd.size=this.value;setMod(arrKey,data[arrKey])});
+  sizeSel&&sizeSel.addEventListener('change',function(){cd.size=this.value;setMod(arrKey,data[arrKey])});
 
-  item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('删除该卡片？')){data[arrKey].splice(idx,1);render();setMod(arrKey,data[arrKey])}});
+  item.querySelector('[data-act="del"]')&&item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('删除该卡片？')){data[arrKey].splice(idx,1);render();setMod(arrKey,data[arrKey])}});
   return item;
 }
 
@@ -474,7 +412,7 @@ function renderButtonsSection(){
   var d=document.createElement('div'); d.className='add-row';
   var bb=document.createElement('button'); bb.className='btn btn-ghost btn-sm'; bb.innerHTML='<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>新增按钮';
   bb.addEventListener('click',function(){data.buttons.push({id:'b'+Date.now(),textZh:'新按钮',textEn:'New Button',link:'#',style:'primary',size:'medium',show:true});render();setMod('buttons',data.buttons)});
-  d.appendChild(bb); body.appendChild(d); wrap.appendChild(body); return wrap;
+  d.appendChild(bb); body.appendChild(d); wrap.appendChild(body); var _h=wrap.querySelector('.group-head');if(_h)_h.onclick=function(){wrap.classList.toggle('open')};return wrap;
 }
 function renderButtonItem(bt,idx){
   var item=document.createElement('div'); item.className='item';
@@ -488,7 +426,7 @@ function renderButtonItem(bt,idx){
   g.appendChild(switchRow('是否显示','show',bt.show!==false));
   item.appendChild(g);
   g.querySelectorAll('input[data-f],select[data-f]').forEach(function(inp){inp.addEventListener('input',function(){if(inp.type==='checkbox')bt[inp.dataset.f]=inp.checked;else bt[inp.dataset.f]=inp.value;setMod('buttons',data.buttons)})});
-  item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('删除该按钮？')){data.buttons.splice(idx,1);render();setMod('buttons',data.buttons)}});
+  item.querySelector('[data-act="del"]')&&item.querySelector('[data-act="del"]').addEventListener('click',function(){if(confirm('删除该按钮？')){data.buttons.splice(idx,1);render();setMod('buttons',data.buttons)}});
   return item;
 }
 
@@ -498,7 +436,7 @@ function renderThemeSection(){
   wrap.innerHTML='<div class="group-head"><div class="l"><span class="gh">'+svg('gear',22)+'</span><h3>主题样式（颜色 / 字体 / 布局 / 动画）</h3><span class="tag">theme</span></div><span class="caret">'+svg('caret',18)+'</span></div>';
   var body=document.createElement('div'); body.className='group-body';
   body.appendChild(themeColorGrid());body.appendChild(themeFontGrid());body.appendChild(themeLayoutGrid());body.appendChild(themeNavGrid());body.appendChild(themeAnimGrid());
-  wrap.appendChild(body);return wrap;
+  wrap.appendChild(body); var _h=wrap.querySelector('.group-head');if(_h)_h.onclick=function(){wrap.classList.toggle('open')};return wrap;
 }
 function themeColorGrid(){var d=data.theme||(data.theme={colors:{}});var c=d.colors||{};var wrap=document.createElement('div');wrap.className='item';var html='<div class="item-head"><div class="t"><span class="ih">'+svg('cube',18)+'</span><span>颜色变量</span></div></div><div class="grid3">';Object.keys(c).forEach(function(k){html+='<div class="inp"><label>--'+esc(k)+'</label><input data-theme="colors" data-f="'+esc(k)+'" value="'+esc(c[k])+'" type="color" style="height:38px;padding:2px"></div>'});html+='</div>';wrap.innerHTML=html;wrap.querySelectorAll('input[data-theme]').forEach(function(inp){inp.addEventListener('input',function(){c[inp.dataset.f]=inp.value;setMod('theme.colors.'+inp.dataset.f,inp.value)})});return wrap}
 function themeFontGrid(){var f=(data.theme||{}).font||{};var wrap=document.createElement('div');wrap.className='item';wrap.innerHTML='<div class="item-head"><div class="t"><span class="ih">'+svg('terminal',18)+'</span><span>字体 / 字号</span></div></div><div class="grid2">'+
@@ -547,44 +485,55 @@ el('#saveBtn').addEventListener('click',function(){
   if(!token||!repo){showToast('请先填写 GitHub Token 与仓库');return}
   saveToGithub(token,repo,branch,path,data).then(function(){showToast('已推送 data.json，前台将自动同步')}).catch(function(err){console.error(err);showToast('推送失败：'+(err&&err.message?err.message:'见控制台'))});
 });
-function saveToGithub(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){var api='https://api.github.com/repos/'+encodeURI(repo)+'/contents/'+encodeURI(path);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'获取文件失败')});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:btoa(unescape(encodeURIComponent(JSON.stringify(dataObj,null,2)))),branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'推送失败')});return r.json()}).then(function(){resolve()}).catch(reject)})}
+function saveToGithub(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){var api='https://api.github.com/repos/'+encodeURI(repo)+'/contents/'+encodeURI(path);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'获取文件失败')});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:utf8ToB64(JSON.stringify(dataObj,null,2)),branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'推送失败')});return r.json()}).then(function(){resolve()}).catch(reject)})}
+
+/* ===== PATCH_3DEF 修复加载失败(navItemTpl/menuItemTpl undefined)+中文推送编码 ===== */
+if(typeof utf8ToB64!=='function'){utf8ToB64=function(str){var te=typeof TextEncoder!=='undefined'?new TextEncoder():null;var bytes=te?te.encode(str):(function(s){var a=[];for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);if(c<128)a.push(c);else if(c<2048){a.push(192|(c>>6));a.push(128|(c&63))}else{a.push(224|(c>>12));a.push(128|((c>>6)&63));a.push(128|(c&63))}}return a})(str);var bin='';for(var k=0;k<bytes.length;k++)bin+=String.fromCharCode(bytes[k]);return btoa(bin)}}
+if(typeof navItemTpl!=='function'){navItemTpl=function(it){return ''}}
+if(typeof menuItemTpl!=='function'){menuItemTpl=function(it){return ''}}
+/* ===== PATCH_3DEF 结束 ===== */
 </script>
 
+<style>
+/* ===== 黑金UI增强(补丁，不改原有样式) ===== */
+.inp input,.inp select,.inp textarea,.search input{background:#000!important;border-color:#333!important;color:var(--text)!important}
+.inp input:focus,.inp select:focus,.inp textarea:focus,.search input:focus{border-color:var(--accent)!important;box-shadow:0 0 0 2px rgba(200,164,92,.22)!important}
+.inp select{-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--accent) 50%),linear-gradient(135deg,var(--accent) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:26px}
+.gold-pop{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#111;border-top:2px solid var(--accent);border-radius:14px 14px 0 0;padding:8px 0 14px;box-shadow:0 -8px 30px rgba(0,0,0,.5);transform:translateY(100%);transition:transform .25s ease;max-height:60vh;overflow:auto}
+.gold-pop.show{transform:translateY(0)}
+.gold-pop .gp-title{font-size:12px;color:var(--accent);padding:6px 18px 4px;letter-spacing:.5px}
+.gold-pop .gp-opt{padding:12px 18px;color:var(--text);font-size:15px;border-top:1px solid #222;display:flex;align-items:center;gap:10px}
+.gold-pop .gp-opt.sel{color:var(--accent)}
+.gold-pop .gp-opt.sel::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block}
+.gold-pop .gp-cancel{margin-top:6px;padding:12px 18px;text-align:center;color:var(--text3);border-top:1px solid #222;font-size:14px}
+.pop-mask{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9998;display:none}
+.pop-mask.show{display:block}
+/* ===== 黑金UI结束 ===== */
+</style>
+<div class="pop-mask" id="popMask"></div>
 <script>
 (function(){
-  // ① 自动填充仓库/分支/路径（只填 Token 即可）
-  var f=function(id,v){var e=document.getElementById(id);if(e&&!e.value)e.value=v;};
-  f('rRepo','Zy-api/Zey');f('rBranch','main');f('rPath','data.json');
-  // ② 分组点击延伸（默认收起 + 点标题 toggle open）
-  document.querySelectorAll('.group').forEach(function(g){g.classList.remove('open')});
-  document.querySelectorAll('.group .group-head').forEach(function(h){
-    if(h._b){return}var g=h.closest('.group');if(!g)return;h.style.cursor='pointer';
-    h.addEventListener('click',function(){g.classList.toggle('open')});h._b=true;
-  });
-  // ③ 黑金底部弹窗：拦截后台内部 #groups 内的 select
-  function openPop(select){
-    var opts=Array.prototype.slice.call(select.options).map(function(o){return{val:o.value,text:o.text||o.label||o.value}});
-    var cur=select.value;
-    var mask=document.createElement('div');mask.className='pop-mask show';
-    var pop=document.createElement('div');pop.className='gold-pop show';
-    var h='<div class="pop-title">'+(select.dataset.label||select.previousElementSibling&&select.previousElementSibling.textContent||'选择')+'</div>';
-    opts.forEach(function(o){h+='<div class="opt'+(o.val===cur?' active':'')+'" data-val="'+o.val.replace(/"/g,'&quot;')+'">'+o.text+'</div>'});
-    h+='<div class="cancel">取消</div>';pop.innerHTML=h;
-    document.body.appendChild(mask);document.body.appendChild(pop);
-    function close(){pop.classList.remove('show');mask.classList.remove('show');setTimeout(function(){pop.remove();mask.remove()},220)}
-    mask.addEventListener('click',close);pop.querySelector('.cancel').addEventListener('click',close);
-    pop.querySelectorAll('.opt').forEach(function(el){el.addEventListener('click',function(){
-      select.value=el.dataset.val;
-      try{select.dispatchEvent(new Event('input',{bubbles:true}));select.dispatchEvent(new Event('change',{bubbles:true}));}catch(e){}
-      close();
-    })});
+  var accent='var(--accent)';
+  // 自动填充仓库/分支/路径
+  var r=document.getElementById('rRepo'),b=document.getElementById('rBranch'),p=document.getElementById('rPath');
+  if(r&&!r.value)r.value='Zy-api/Zey'; if(b&&!b.value)b.value='main'; if(p&&!p.value)p.value='data.json';
+  // 分组点击延伸 + 默认收起
+  function bindToggles(){document.querySelectorAll('.group').forEach(function(gp){if(!gp.classList.contains('group--toggled')){gp.classList.add('group--toggled');gp.classList.remove('open');var head=gp.querySelector('.group-head');if(head&&!head.dataset.bound){head.dataset.bound='1';head.addEventListener('click',function(){gp.classList.toggle('open')})}}})}
+  bindToggles(); var mo=new MutationObserver(bindToggles); mo.observe(document.getElementById('groups')||document.body,{childList:true,subtree:true});
+  // 黑金底部弹窗替代内部 select
+  function openGoldPop(select){
+    var opts=Array.prototype.slice.call(select.options);if(!opts.length)return;
+    var pop=document.getElementById('goldPop');if(!pop){pop=document.createElement('div');pop.id='goldPop';pop.className='gold-pop';document.body.appendChild(pop)}
+    var mask=document.getElementById('popMask');
+    pop.innerHTML='<div class="gp-title">请选择</div>'+opts.map(function(o,idx){return '<div class="gp-opt'+(o.selected?' sel':'')+'" data-i="'+idx+'">'+(o.text||o.value)+'</div>'}).join('')+'<div class="gp-cancel">取消</div>';
+    pop.classList.add('show');mask.classList.add('show');
+    pop.onclick=function(e){var t=e.target;if(t.classList.contains('gp-cancel')){closePop();return}if(t.classList.contains('gp-opt')){select.selectedIndex=+t.dataset.i;select.dispatchEvent(new Event('input',{bubbles:true}));select.dispatchEvent(new Event('change',{bubbles:true}));closePop()}};
+    function closePop(){pop.classList.remove('show');mask.classList.remove('show')}
+    mask.onclick=closePop;
   }
-  function bind(){document.querySelectorAll('#groups select').forEach(function(s){if(s._b)return;s._b=true;
-    s.addEventListener('mousedown',function(e){e.preventDefault();openPop(s)});
-    s.addEventListener('focus',function(e){e.preventDefault();s.blur();openPop(s)});
-  })}bind();
-  var g=document.getElementById('groups');if(g)new MutationObserver(bind).observe(g,{childList:true,subtree:true});
+  document.getElementById('groups').addEventListener('click',function(e){var t=e.target;if(t.tagName==='SELECT'&&t.closest('#groups')){e.preventDefault();openGoldPop(t)}});
 })();
 </script>
+
 </body>
 </html>
