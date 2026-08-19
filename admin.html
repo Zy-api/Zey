@@ -172,20 +172,19 @@ var data = null; var modified = {}; var curFilter = 'all'; var curSearch = '';
 // 扩展图标库：内置 SVG 图标 + 支持 URL 链接
 var ICON_KEYS = ['cube','shield','package','bolt','download','gear','globe','paperplane','check','layers','terminal','flame','rocket','star','heart','zap','cpu','database','lock','shield-check','activity','server','code','tool','wrench','moon','sun','cloud','award','target','trending-up','thunderbolt'];
 var ICON_SVG = {};
-// UTF-8 安全 Base64 编码（解决中文 content 经 GitHub API 推送时编码失败问题）
-function utf8ToB64(str){var bytes=new (typeof TextEncoder!=='undefined'?TextEncoder:function(){return{encode:function(s){return unescape(encodeURIComponent(s))}}})(typeof TextEncoder!=='undefined'?'utf-8':'').encode(str);var bin='';for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin)}
 function el(s){return document.querySelector(s)}
 function all(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
 function showToast(msg){el('#toastText').textContent=msg;el('#toast').classList.add('show');setTimeout(function(){el('#toast').classList.remove('show')},2200)}
 function svg(name,size){size=size||18;var raw=ICON_SVG[name]||ICON_SVG.cube||'';var m=raw.match(/viewBox='([^']+)'/);var vb=m?m[1]:'0 0 24 24';var inner=raw.replace(/<svg[^>]*>/,'').replace(/<\/svg>/,'');return '<svg width="'+size+'" height="'+size+'" viewBox="'+vb+'">'+inner+'</svg>'}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function unesc(s){return String(s||'').replace(/&quot;/g,'"').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&')}
+function utf8ToB64(str){var TE=(typeof TextEncoder!=='undefined')?TextEncoder:(function(){function T(){this.encode=function(s){var a=[];for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);if(c<128)a.push(c);else if(c<2048){a.push(192|(c>>6),128|(c&63))}else{a.push(224|(c>>12),128|((c>>6)&63),128|(c&63))}}return new Uint8Array(a)}}return T})();var bytes=new TE().encode(str);var bin='';for(var i=0;i<bytes.length;i++)bin+=String.fromCharCode(bytes[i]);return btoa(bin)}
 
-fetch(DATA_URL,{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status+' 无法读取 data.json');return r.json()}).then(function(d){
+fetch(DATA_URL,{cache:'no-cache'}).then(function(r){return r.json()}).then(function(d){
   data=d; ICON_SVG=data.icons||{};
   el('#status').classList.add('loaded'); el('#statusText').textContent='已加载';
   render();
-}).catch(function(err){var msg=err&&err.message?err.message:String(err);window.__adminLastLoadErr__=msg;console.error('[admin] 加载失败:',err);el('#statusText').textContent='加载失败';var st=el('#stat');if(st)st.textContent='加载失败：'+(msg.length>60?msg.slice(0,60)+'…':msg)+'（请确保通过 HTTP 访问且 data.json 与 admin.html 同目录）'});
+}).catch(function(err){el('#statusText').textContent='加载失败：请确认 data.json 与 admin.html 同目录';console.error('load data.json failed',err);var e=document.createElement('div');e.className='footer-note';e.style.color='#e0b96b';e.textContent='加载失败：请通过 HTTP 访问（如 GitHub Pages），且 data.json 与本文件在同一目录。';var s=document.getElementById('status');if(s&&s.parentNode)s.parentNode.insertBefore(e,s.nextSibling);});
 
 function setMod(key,val){modified[key]=val}
 function isMod(key){return key in modified}
@@ -485,11 +484,9 @@ el('#exportBtn').addEventListener('click',function(){var blob=new Blob([JSON.str
 el('#saveBtn').addEventListener('click',function(){
   var token=el('#rToken').value.trim();var repo=el('#rRepo').value.trim();var branch=el('#rBranch').value.trim()||'main';var path=el('#rPath').value.trim()||'data.json';
   if(!token||!repo){showToast('请先填写 GitHub Token 与仓库');return}
-  try{localStorage.setItem('zy_admin_cfg_v1',JSON.stringify({repo:repo,branch:branch,path:path}))}catch(e){}
-  saveToGithub(token,repo,branch,path,data).then(function(){try{localStorage.setItem('zy_admin_cfg_v1',JSON.stringify({token:token,repo:repo,branch:branch,path:path}))}catch(e){}showToast('已推送 data.json，前台将自动同步')}).catch(function(err){console.error(err);showToast('推送失败：'+(err&&err.message?err.message:'见控制台'))});
+  saveToGithub(token,repo,branch,path,data).then(function(){showToast('已推送 data.json，前台将自动同步')}).catch(function(err){console.error(err);showToast('推送失败：'+(err&&err.message?err.message:'见控制台'))});
 });
-(function(){try{var cfg=JSON.parse(localStorage.getItem('zy_admin_cfg_v1')||'null');if(cfg){if(cfg.token)el('#rToken').value=cfg.token;if(cfg.repo)el('#rRepo').value=cfg.repo;if(cfg.branch)el('#rBranch').value=cfg.branch;if(cfg.path)el('#rPath').value=cfg.path}}catch(e){}}())
-function saveToGithub(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){if(!token||!repo){reject(new Error('请填写 GitHub Token 与仓库'));return}var repoClean=repo.replace(/^https?:\/\/(www\.)?github\.com\//i,'').replace(/\.git$/i,'');var api='https://api.github.com/repos/'+encodeURI(repoClean)+'/contents/'+encodeURI(path);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(r.status===401||r.status===403)throw new Error('Token 无 repo 权限或已过期（请使用勾选 repo 权限的 Classic Token）');if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'获取文件失败')});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:utf8ToB64(JSON.stringify(dataObj,null,2)),branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(r.status===404)throw new Error('仓库/分支/路径不存在：'+repoClean+' '+path);if(r.status===401||r.status===403)throw new Error('Token 无 repo 权限或已过期');if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'推送失败')});return r.json()}).then(function(){resolve()}).catch(reject)})}
+function saveToGithub(token,repo,branch,path,dataObj){return new Promise(function(resolve,reject){var api='https://api.github.com/repos/'+encodeURI(repo)+'/contents/'+encodeURI(path);fetch(api+'?ref='+encodeURIComponent(branch),{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}}).then(function(r){if(r.status===404)return null;if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'获取文件失败')});return r.json()}).then(function(info){var body={message:'update data.json from admin',content:utf8ToB64(JSON.stringify(dataObj,null,2)),branch:branch};if(info&&info.sha)body.sha=info.sha;return fetch(api,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify(body)})}).then(function(r){if(!r.ok)return r.json().then(function(j){throw new Error(j.message||'推送失败')});return r.json()}).then(function(){resolve()}).catch(reject)})}
 </script>
 </body>
 </html>
